@@ -1,0 +1,33 @@
+import { httpRequest } from "@/lib/utils/dataHelpers";
+import { withPageAuthRequired } from "@auth0/nextjs-auth0";
+import { getAuthToken } from "@/lib/utils/dataHelpers";
+
+import { SupplierSummary } from "@/lib/utils/dataTypes";
+import SuppliersContainer from "@/components/suppliers/suppliersContainer";
+
+const SuppliersPage = withPageAuthRequired(async () => {
+  const token = await getAuthToken();
+
+  const response: SupplierSummary = await httpRequest(
+    "/suppliers",
+    null,
+    "GET",
+    { cache: "no-cache" }
+  );
+
+  const data = response.suppliers;
+
+  return (
+    <div>
+      <h1>{response.count} Suppliers</h1>
+      <SuppliersContainer 
+        data={data}
+      />
+    </div>
+  );
+},
+  { returnTo: "/suppliers" }
+);
+
+
+export default SuppliersPage;

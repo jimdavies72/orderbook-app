@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
+import { UserProvider } from "@auth0/nextjs-auth0/client";
+import { ThemeProvider } from "@/components/lightDark/theme-provider";
+import Navbar from "@/components/navbar/Navbar";
+import { Toaster } from "@/components/ui/toaster";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -16,7 +20,26 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <UserProvider>
+        <body className={inter.className}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <div className="flex flex-col items-center">
+              <div className="w-[90%]">
+                <div className="flex justify-center">
+                  <Navbar />
+                </div>
+                {children}
+                <Toaster />
+              </div>
+            </div>
+          </ThemeProvider>
+        </body>
+      </UserProvider>
     </html>
   );
 }
