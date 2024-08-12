@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
 @layer base {
   :root {
     --light-shadow: 4px 5px 5px 0px rgba(0, 0, 0, 0.51);

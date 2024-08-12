@@ -1,22 +1,22 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Supplier } from '@/lib/utils/dataTypes';
+import { useState } from "react";
+import { Supplier } from "@/lib/utils/dataTypes";
 
-import DeleteForm from '@/components/forms/delete-form';
-import EditForm from '@/components/forms/edit-form';
-import IconMenu from '@/components/icon-menu';
-import { ResponsiveDialog } from '@/components/responsive-dialog';
-import { Button } from '@/components/ui/button';
+import DeleteForm from "@/components/forms/delete-form";
+import EditForm from "@/components/forms/supplierEdit-form";
+import IconMenu from "@/components/icon-menu";
+import { ResponsiveDialog } from "@/components/responsive-dialog";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Row } from '@tanstack/react-table';
-import { MoreHorizontal, SquarePen, Trash2 } from 'lucide-react';
+} from "@/components/ui/dropdown-menu";
+import { Row } from "@tanstack/react-table";
+import { MoreHorizontal, SquarePen, Trash2 } from "lucide-react";
 
 interface WithData<T> {
   _id: string;
@@ -30,12 +30,12 @@ interface DataTableRowActionsProps<TData> {
 }
 
 export function DataTableRowActions<TData extends WithData<Supplier>>({
-  row
+  row,
 }: DataTableRowActionsProps<TData>) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const cardId = row.original._id as string;
-  const supplierRow = row.original as Supplier
+  const supplierRow = row.original as Supplier;
 
   return (
     <>
@@ -45,10 +45,7 @@ export function DataTableRowActions<TData extends WithData<Supplier>>({
         title="Edit Supplier"
         description="Edit this supplier"
       >
-        <EditForm 
-          setIsOpen={setIsEditOpen}
-          supplierRow={supplierRow} 
-        />
+        <EditForm setIsOpen={setIsEditOpen} supplierRow={supplierRow} />
       </ResponsiveDialog>
       <ResponsiveDialog
         isOpen={isDeleteOpen}

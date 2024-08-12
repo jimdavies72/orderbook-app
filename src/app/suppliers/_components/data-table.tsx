@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Suppliers} from "@/lib/utils/dataTypes";
+import { useState } from "react";
+import { Suppliers } from "@/lib/utils/dataTypes";
 
-import { DataTablePagination } from '@/components/pagination';
-import { ResponsiveDialog } from '@/components/responsive-dialog';
-import EditForm from "@/components/forms/edit-form";
+import { DataTablePagination } from "@/components/pagination";
+import { ResponsiveDialog } from "@/components/responsive-dialog";
+import EditForm from "@/components/forms/supplierEdit-form";
 
-import { Button } from '@/components/ui/button';
-import { FolderPlus, LayoutList, SettingsIcon } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { FolderPlus, LayoutList, SettingsIcon } from "lucide-react";
 import IconMenu from "@/components/icon-menu";
 
 import {
@@ -16,8 +16,8 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -25,7 +25,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from "@/components/ui/table";
 import {
   ColumnFiltersState,
   flexRender,
@@ -36,15 +36,11 @@ import {
   SortingState,
   useReactTable,
   VisibilityState,
-} from '@tanstack/react-table';
-import { ArrowLeft, ChevronDown } from 'lucide-react';
-import { columns } from '../_components/columns';
+} from "@tanstack/react-table";
+import { ArrowLeft, ChevronDown } from "lucide-react";
+import { columns } from "../_components/columns";
 
-export const DataTable = ({ 
-  data
-}: { 
-  data: Suppliers
- }) => {
+export const DataTable = ({ data }: { data: Suppliers }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -109,10 +105,7 @@ export const DataTable = ({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              <IconMenu
-                text="View"
-                icon={<LayoutList className="h-4 w-4" />}
-              />
+              <IconMenu text="View" icon={<LayoutList className="h-4 w-4" />} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -192,4 +185,3 @@ export const DataTable = ({
     </div>
   );
 };
-

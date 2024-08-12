@@ -7,6 +7,7 @@ import {Supplier, ResponseMessage} from '@/lib/utils/dataTypes';
 import { getUserProfileData } from '@/services/profile.service';
 
 import { Button } from '@/components/ui/button';
+import { ToastAction } from "@/components/ui/toast";
 import { useToast} from '@/components/ui/use-toast';
 import {
   Form,
@@ -88,11 +89,13 @@ export const EditForm = ({
       if (response) {
         router.refresh();
         toast({
+          duration: 1500,
           title: response.title,
           description: response.message,
         });
       } else {
         toast({
+          duration: 2000,
           title: "Error",
           description: "Something went wrong",
         });
