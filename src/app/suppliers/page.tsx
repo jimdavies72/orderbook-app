@@ -2,7 +2,7 @@ import { httpRequest } from "@/lib/utils/dataHelpers";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 
 import { SupplierSummary } from "@/lib/utils/dataTypes";
-import SuppliersContainer from "@/components/suppliers/suppliersContainer";
+import SuppliersContainer from "../../../suppliersContainer";
 
 const SuppliersPage = withPageAuthRequired(async () => {
 

@@ -1,17 +1,14 @@
-const Card = ({ children }: { children: React.ReactNode }) => {
-  const cardStyle = {
-    padding: "100px",
-    margin: "10px",
-    boxShadow: "var(--light-shadow)",
-    border: "1px solid #ddd",
-    borderRadius: "5px",
-    background: "white",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  };
+const Card = ({ 
+  children,
+}: { 
+  children: React.ReactNode,
+}) => {
 
-  return <div style={cardStyle}>{children}</div>;
+  return (
+    <div className="mt-2 rounded border p-2 flex flex-col shadow-md shadow-gray-500 items-left justify-center hover:cursor-pointer hover:bg-gray-200">
+      {children}
+    </div>
+  );
 };
 
 export default Card;

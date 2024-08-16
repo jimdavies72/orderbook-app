@@ -16,9 +16,14 @@ type SupplierSummary = {
 };
 
 type Comment = {
+  _id: string,
   container: object,
   order: object,
-  comment: string
+  comment: string,
+  createdBy: string,
+  createdAt: string,
+  updatedBy: string,
+  updatedAt: string
 }
 
 type Comments = [
@@ -26,6 +31,7 @@ type Comments = [
 ]
 
 type Order = {
+  _id: string,
   container: object,
   supplier: object,
   orderNumber: string,
@@ -45,7 +51,9 @@ type Order = {
   artworkDrawings: string,
   printOnBag: string,
   artworkSaved: string,
-  comments: Comments
+  comments: Comments,
+  createdBy: string,
+  updatedBy: string
 }
 
 type Orders = [
@@ -53,6 +61,7 @@ type Orders = [
 ]
 
 type Container = {
+  _id: string,
   containerId: string,
   complete: boolean,
   orders: Orders,
@@ -74,17 +83,9 @@ type Containers = [
   Container
 ];
 
-type SuppliersDetail = {
-    supplier: Supplier,
+type ContainersList = {
+    count: number,
     containers: Containers
-};
-
-type SupplierFull = {
-  count: number;
-  suppliers: SuppliersDetail;
-  // filter: (
-  //   predicate: (value: any, index: number, array: SupplierFull[]) => boolean
-  // ) => SupplierFull[];
 };
 
 type ErrorProps = {
@@ -106,4 +107,4 @@ type Person = {
   image: string
 };
 
-export type { SupplierFull, SupplierSummary, SuppliersDetail, Suppliers, Supplier, Containers, Container, Orders, Order, ErrorProps, ResponseMessage, Person };
+export type { SupplierSummary, ContainersList, Suppliers, Supplier, Containers, Container, Orders, Order, Comments, Comment, ErrorProps, ResponseMessage, Person };

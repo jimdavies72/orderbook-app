@@ -79,3 +79,10 @@ export const httpRequest = async (
     }
   }
 };
+
+export const getDate = async (dateString: string) => {
+  const tmpDate = new Date(dateString);
+  const date = await tmpDate.toLocaleDateString();
+  const time = await tmpDate.toLocaleTimeString();
+  return `${date} ${time}`;
+};

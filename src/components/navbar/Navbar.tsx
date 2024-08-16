@@ -18,7 +18,7 @@ const Navbar = () => {
   const { user } = useUser();
   
   return (
-    <div className="flex items-center justify-between p-4 m-2.5 mt-4 mb-6 w-[90%] border-solid border rounded shadow-md shadow-gray-500">
+    <div className="flex items-center justify-between p-4 mt-4 mb-4 w-[90%] border-solid border rounded shadow-md shadow-gray-500">
       <div className="flex flex-row items-center justify-center">
         <div className="mr-4 cursor-pointer">
           <DropdownMenu>
@@ -66,9 +66,9 @@ const Navbar = () => {
                     className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 "
                   >
                     <Button variant="ghost" asChild>
-                      <Link href="/containers">
+                      <Link href="/orderbook">
                         <IconMenu
-                          text="Containers"
+                          text="Orderbook"
                           icon={<Ship className="h-4 w-4" />}
                         />
                       </Link>
@@ -85,7 +85,9 @@ const Navbar = () => {
               >
                 {user ? (
                   <Button variant="ghost" asChild>
-                    <Link href="/api/auth/logout">
+                    <Link
+                      href="/api/auth/logout"
+                    >
                       <IconMenu
                         text="Sign Out"
                         icon={<LockKeyhole className="h-4 w-4" />}
