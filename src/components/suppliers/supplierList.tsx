@@ -1,15 +1,17 @@
 'use client';
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Suppliers } from "@/lib/utils/dataTypes";
 import SupplierButtonRibbon from "./supplierButtonRibbon";
 import ContainerList from "../containers/containerList";
+import SuchEmpty from "../suchEmpty";
 
 const SupplierList = ({
   suppliers
 }:{
   suppliers: Suppliers
 }) => {
-
+  const router = useRouter();
   const [id, setId] = useState<string>("");
 
   const supplierHandler = (supplierId: string) => { 
@@ -25,7 +27,10 @@ const SupplierList = ({
         />
       </div>
       <div>
-        <ContainerList supplierId={id} />
+        {!id ?
+          <SuchEmpty /> :
+          <ContainerList supplierId={id} />
+        }
       </div>
     </div>
   );

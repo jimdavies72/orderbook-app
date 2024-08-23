@@ -1,8 +1,6 @@
 import {useEffect, useState } from "react";
-
 import { Container } from "@/lib/utils/dataTypes";
 import Card from "@/components/card";
-import { Button } from "@/components/ui/button";
 
 export const ContainerComponent = ({
   activeContainer,
@@ -15,7 +13,6 @@ export const ContainerComponent = ({
 }) => {
 const [activeStyle, setActiveStyle] = useState<string>("");
 
-
   useEffect(() => {
     if (activeContainer === container._id) {
       setActiveStyle("font-bold")
@@ -25,11 +22,16 @@ const [activeStyle, setActiveStyle] = useState<string>("");
   }, [activeContainer])
 
   return (
-    <div onClick={() => {
-      containerHandler(container._id)}} 
-      className="w-full">
+    <div
+      onClick={() => {
+        containerHandler(container._id);
+      }}
+      className="w-full"
+    >
       <Card>
-        <h5 className={activeStyle}>Container: {container.containerNumber}</h5>
+        <h5 className={activeStyle}>
+          Container: {container.containerNumber}
+        </h5>
         <p>Value: {container.value}</p>
       </Card>
     </div>

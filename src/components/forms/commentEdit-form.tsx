@@ -7,7 +7,6 @@ import {Comment, ResponseMessage} from '@/lib/utils/dataTypes';
 import { getUserProfileData } from '@/services/profile.service';
 
 import { Button } from '@/components/ui/button';
-import { ToastAction } from "@/components/ui/toast";
 import { useToast} from '@/components/ui/use-toast';
 import {
   Form,
@@ -17,27 +16,24 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, Router } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 const formSchema = z.object({
-  container: z.object({}),
-  order: z.object({}),
   comment: z.string().min(1),
-  customer: z.string().min(1),
-  createdBy: z.string().min(1),
-  createdAt: z.string().min(1),
-  updatedBy: z.string().min(1),
-  updatedAt: z.string().min(1),
 });
 
 export const EditForm = ({
+  orderId,
+  containerId,
   setIsOpen,
   commentRow,
 }: {
+  orderId?: string,
+  containerId?: string,
   setIsOpen: Dispatch<SetStateAction<boolean>>,
   commentRow?: Comment | null
 }) =>{
@@ -47,13 +43,7 @@ export const EditForm = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      container: commentRow?.container || undefined,
-      order: commentRow?.order || undefined,
       comment: commentRow?.comment || "",
-      createdBy: commentRow?.createdBy || "",
-      createdAt: commentRow?.createdAt || "",
-      updatedBy: commentRow?.updatedBy || "",
-      updatedAt: commentRow?.updatedAt || "",
     },
   });
 
@@ -62,21 +52,28 @@ export const EditForm = ({
     try {
       const user = await getUserProfileData();
       const inits: string = getInitials(user.name);
-      
+
+      let parentId = {};
+      if (containerId) {
+        parentId = { container: containerId };
+      } else {
+        parentId = { order: orderId };
+      }
+
       // default is assumed to be edit doc route
-      let endpoint = "/comments";
-      let httpVerb = "PATCH";
+      let endpoint = "/comments/update";
+      let httpVerb = "PUT";
       let payload = {};
-      
+
       payload = {
         filterKey: "_id",
         filterValue: commentRow?._id,
         data: {
           ...values,
           updatedBy: inits,
-        },
+        }
       };
-      
+  
       // come via the add doc route
       if (!commentRow) {
         endpoint = "/comments";
@@ -85,9 +82,10 @@ export const EditForm = ({
           ...values,
           createdBy: inits,
           updatedBy: inits,
+          ...parentId,
         };
       }
-      
+
       const response: ResponseMessage = await httpRequest(
         endpoint,
         payload,
@@ -97,13 +95,13 @@ export const EditForm = ({
       if (response) {
         router.refresh();
         toast({
-          duration: 1500,
+          duration: 2000,
           title: response.title,
           description: response.message,
         });
       } else {
         toast({
-          duration: 2000,
+          duration: 2500,
           title: "Error",
           description: "Something went wrong",
         });
@@ -129,7 +127,7 @@ export const EditForm = ({
             <FormItem className="col-span-2 md:col-span-1">
               <FormLabel>Comment</FormLabel>
               <FormControl>
-                <Input
+                <Textarea
                   {...field}
                   placeholder="Enter comment here"
                   className="text-md"

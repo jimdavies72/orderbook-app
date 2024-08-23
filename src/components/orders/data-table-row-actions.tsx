@@ -54,7 +54,6 @@ export function DataTableRowActions<TData extends WithData<Order>>({
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const cardId = row.original._id as string;
-  //const orderRow = row.original;
   const orderRow = row.original as Order;
 
   return (

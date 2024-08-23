@@ -1,7 +1,7 @@
 'use client';
-import { useEffect, useState } from "react";
-
+import { useState } from "react";
 import { Suppliers } from "@/lib/utils/dataTypes";
+
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 

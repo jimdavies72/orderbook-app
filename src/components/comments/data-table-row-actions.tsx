@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Comments, Comment} from "@/lib/utils/dataTypes";
 
 import DeleteForm from "@/components/forms/delete-form";
-import EditForm from "@/components/forms/orderEdit-form";
+import EditForm from "@/components/forms/commentEdit-form";
 import IconMenu from "@/components/icon-menu";
 import { ResponsiveDialog } from "@/components/responsive-dialog";
 import { Button } from "@/components/ui/button";
@@ -21,8 +21,8 @@ import { arrayOutputType } from "zod";
 
 interface WithData<T> {
   _id: string;
-  container: object;
-  order: object;
+  container: string;
+  order: string;
   comment: string;
   createdBy: string;
   createdAt: string;
@@ -38,6 +38,8 @@ export function DataTableRowActions<TData extends WithData<Comment>>({
 }: DataTableRowActionsProps<TData>) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const orderId = row.original.order as string;
+  const containerId = row.original.container as string;
   const cardId = row.original._id as string;
   const commentRow = row.original as Comment;
 
@@ -49,7 +51,12 @@ export function DataTableRowActions<TData extends WithData<Comment>>({
         title="Edit Comment"
         description="Edit this Comment"
       >
-        <EditForm setIsOpen={setIsEditOpen} commentRow={commentRow} />
+        <EditForm
+          orderId={orderId}
+          containerId={containerId}
+          setIsOpen={setIsEditOpen}
+          commentRow={commentRow}
+        />
       </ResponsiveDialog>
       <ResponsiveDialog
         isOpen={isDeleteOpen}

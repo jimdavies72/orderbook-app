@@ -8,7 +8,7 @@ import { ResponsiveDialog } from "@/components/responsive-dialog";
 import EditForm from "@/components/forms/supplierEdit-form";
 
 import { Button } from "@/components/ui/button";
-import { FolderPlus, LayoutList, SettingsIcon } from "lucide-react";
+import { FolderPlus, LayoutList } from "lucide-react";
 import IconMenu from "@/components/icon-menu";
 
 import {
@@ -37,7 +37,7 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
-import { ArrowLeft, ChevronDown } from "lucide-react";
+
 import { columns } from "../_components/columns";
 
 export const DataTable = ({ data }: { data: Suppliers }) => {

@@ -1,21 +1,28 @@
 'use client';
 import { useState, useEffect } from "react";
-import { httpRequest } from "@/lib/utils/dataHelpers";
-import CommentComponent from "@/components/comments/commentComponent";
-import { Comments, Comment } from "@/lib/utils/dataTypes";
-import ContainerCard from "@/components/containerCard";
+import { Comments } from "@/lib/utils/dataTypes";
+import { DataTable } from "@/components/comments/data-table";
 
 const CommentList = ({
-  comments
+  showAddButton,
+  comments,
+  orderId,
+  containerId
 }: {
-  comments: Comments
+  showAddButton: boolean,
+  comments: Comments,
+  orderId?: string,
+  containerId?: string
 }) => {
 
   return (
     <div>
-      {comments && comments.map ((comment: Comment, index) => (
-        <CommentComponent key={index} comment={comment} />
-      ))}
+      <DataTable 
+        showAddButton={showAddButton}
+        orderId={orderId}
+        containerId={containerId}
+        data={comments} 
+      />
     </div>
   );
 };

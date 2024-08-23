@@ -1,14 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Orders, Order } from "@/lib/utils/dataTypes";
+import { Comments } from "@/lib/utils/dataTypes";
 
-import { DataTablePagination } from "@/components/pagination";
 import { ResponsiveDialog } from "@/components/responsive-dialog";
-import EditForm from "@/components/forms/orderEdit-form";
+import EditForm from "@/components/forms/commentEdit-form";
 
 import { Button } from "@/components/ui/button";
-import { FolderPlus, LayoutList, SettingsIcon } from "lucide-react";
+import { MessageSquarePlus, LayoutList, SettingsIcon } from "lucide-react";
 import IconMenu from "@/components/icon-menu";
 
 import {
@@ -40,11 +39,25 @@ import {
 
 import { columns } from "./columns";
 
-export const DataTable = ({ data }: { data: Orders }) => {
+export const DataTable = ({ 
+  showAddButton,
+  orderId,
+  containerId,
+  data 
+}: { 
+  showAddButton?: boolean,
+  orderId?: string,
+  containerId?: string,
+  data: Comments 
+}) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>([ 
+    { id: "createdAt", desc: true }
+  ]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+    createdAt: false, updatedAt: false
+  });
   const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
@@ -65,9 +78,6 @@ export const DataTable = ({ data }: { data: Orders }) => {
       rowSelection,
     },
     initialState: {
-      pagination: {
-        pageSize: 10, //custom default page size
-      },
     },
   });
 
@@ -77,31 +87,29 @@ export const DataTable = ({ data }: { data: Orders }) => {
         <ResponsiveDialog
           isOpen={isEditOpen}
           setIsOpen={setIsEditOpen}
-          title="Add Order"
-          description="Add new Order"
+          title="Add Comment"
+          description="Add new Comment"
         >
-          <EditForm setIsOpen={setIsEditOpen} />
-        </ResponsiveDialog>
-        <Input
-          placeholder="Search..."
-          value={(table.getColumn("orderNumber")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("orderNumber")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <Button
-          variant="outline"
-          onClick={() => {
-            setIsEditOpen(true);
-          }}
-          className="ml-4 rounded-md p-2 hover:bg-neutral-100"
-        >
-          <IconMenu
-            text="Add Order"
-            icon={<FolderPlus className="h-4 w-4" />}
+          <EditForm
+            orderId={orderId}
+            containerId={containerId}
+            setIsOpen={setIsEditOpen}
           />
-        </Button>
+        </ResponsiveDialog>
+        {!showAddButton ? null : (
+          <Button
+            variant="outline"
+            onClick={() => {
+              setIsEditOpen(true);
+            }}
+            className="ml-4 rounded-md p-2 hover:bg-neutral-100"
+            >
+            <IconMenu
+              text="Add Comment"
+              icon={<MessageSquarePlus className="h-5 w-5" />}
+              />
+          </Button>
+        )}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
@@ -130,7 +138,7 @@ export const DataTable = ({ data }: { data: Orders }) => {
         </DropdownMenu>
       </div>
       <div className="rounded-md border">
-        <Table>
+        <Table className="h-7">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -178,9 +186,6 @@ export const DataTable = ({ data }: { data: Orders }) => {
             )}
           </TableBody>
         </Table>
-      </div>
-      <div className="mt-2">
-        <DataTablePagination table={table} />
       </div>
     </div>
   );

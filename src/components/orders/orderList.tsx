@@ -1,6 +1,5 @@
 'use client';
 import { useState } from "react";
-import OrderComponent from "./orderComponent";
 import { Orders, Order, Comments } from "@/lib/utils/dataTypes";
 import { DataTable } from "@/components/orders/data-table"
 import ContainerCard from "@/components/containerCard";
@@ -11,6 +10,7 @@ const OrderList = ({
 }: {
   orders: Orders
 }) => {
+  const [order, setOrder] = useState<Order>({} as Order);
   const [orderComments, setOrderComments] = useState<Comments>([{}] as Comments);
 
   const orderHandler = (orderId: string) => {
@@ -18,29 +18,28 @@ const OrderList = ({
 
     const order: Order | undefined = orders.find((o: Order) => orderId === o._id);
     
+    setOrder(order as Order);
+
     if (order) {
       if (order.comments.length > 0) {
         setOrderComments(order.comments as Comments);
-      }
+      } 
     };
   };
 
   return (
     <div>
       <div>
-        <DataTable data={orders} />
-        {/* {orders &&
-          orders.map((order: Order, index) => (
-            <OrderComponent
-              key={index}
-              orderHandler={orderHandler}
-              order={order}
-            />
-          ))} */}
+        <ContainerCard>
+          <DataTable data={orders} />
+        </ContainerCard>
       </div>
       <div>
         <ContainerCard>
-          <CommentList comments={orderComments} />
+          <CommentList 
+            showAddButton={false} 
+            comments={orderComments} 
+          />
         </ContainerCard>
       </div>
     </div>

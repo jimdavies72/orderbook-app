@@ -17,8 +17,8 @@ type SupplierSummary = {
 
 type Comment = {
   _id: string,
-  container: object,
-  order: object,
+  container: string,
+  order: string,
   comment: string,
   createdBy: string,
   createdAt: string,
@@ -32,8 +32,8 @@ type Comments = [
 
 type Order = {
   _id: string,
-  container: object,
-  supplier: object,
+  container: string,
+  supplier: string,
   orderNumber: string,
   forPurchasing: number,
   productCode: string,

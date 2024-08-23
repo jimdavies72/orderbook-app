@@ -3,27 +3,23 @@ import { SupplierSummary } from "@/lib/utils/dataTypes";
 import SupplierList from "@/components/suppliers/supplierList";
 import { httpRequest } from "@/lib/utils/dataHelpers";
 
-
 const OrderBook = withPageAuthRequired(async () => {
-
   const response: SupplierSummary = await httpRequest(
-      "/suppliers",
-      { filterKey: "enabled", filterValue: true },
-      "PUT",
-      { refreshType: { cache: "force-cache" } }
-    );
-  
-    if (!response) {
-      throw new Error("Failed to fetch data");
-    }
+    "/suppliers",
+    { filterKey: "enabled", filterValue: true },
+    "PUT"
+  );
 
-    const data = response.suppliers;
-    
-    return (
-      <SupplierList suppliers={data} />
-    )
-  },
-  { returnTo: "/orderbook" }
-);
+  if (!response) {
+    throw new Error("Failed to fetch data");
+  }
+
+  const data = response.suppliers;
+  console.log("data: ", data)
+  
+  return (
+    <SupplierList suppliers={data} />
+  );
+},{ returnTo: "/orderbook" });
 
 export default OrderBook;

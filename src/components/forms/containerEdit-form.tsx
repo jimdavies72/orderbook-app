@@ -2,11 +2,12 @@
 import {useRouter} from 'next/navigation';
 import { httpRequest } from '@/lib/utils/dataHelpers';
 import { getInitials } from '@/lib/utils/helperFunctions';
-import React, { Dispatch, ReactNode, SetStateAction, useState, FormEvent } from 'react';
-import {Order, ResponseMessage} from '@/lib/utils/dataTypes';
+import React, { Dispatch, SetStateAction } from 'react';
+import {Container, ResponseMessage} from '@/lib/utils/dataTypes';
 import { getUserProfileData } from '@/services/profile.service';
 
 import { Button } from '@/components/ui/button';
+import { Switch } from "@/components/ui/switch";
 import { useToast} from '@/components/ui/use-toast';
 import {
   Form,
@@ -23,18 +24,19 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 const formSchema = z.object({
-  orderNumber: z.string().min(1),
-  forPurchasing: z.number().min(1),
-  productCode: z.string().min(1),
-  customer: z.string().min(1),
+  containerId: z.string().min(1),
+  complete: z.boolean().default(false),
+  value: z.number().min(0),
 });
 
 export const EditForm = ({
   setIsOpen,
-  orderRow,
+  containerId,
+  containerRow,
 }: {
   setIsOpen: Dispatch<SetStateAction<boolean>>,
-  orderRow?: Order | null
+  containerId: string,
+  containerRow?: Container | null
 }) =>{
   const router = useRouter();
   const { toast } = useToast();
@@ -42,10 +44,9 @@ export const EditForm = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      orderNumber: orderRow?.orderNumber || "",
-      forPurchasing: orderRow?.forPurchasing || undefined,
-      productCode: orderRow?.productCode || "",
-      customer: orderRow?.customer || "",
+      containerId: containerRow?.containerId || "",
+      complete: containerRow?.complete || false,
+      value: containerRow?.value|| 0,
     },
   });
 
@@ -56,22 +57,22 @@ export const EditForm = ({
       const inits: string = getInitials(user.name);
       
       // default is assumed to be edit doc route
-      let endpoint = "/orders";
+      let endpoint = "/containers/update";
       let httpVerb = "PUT";
       let payload = {};
       
       payload = {
         filterKey: "_id",
-        filterValue: orderRow?._id,
-        data: {
+        filterValue: containerId,
+        supplier: {
           ...values,
           updatedBy: inits,
         },
       };
       
       // come via the add doc route
-      if (!orderRow) {
-        endpoint = "/orders";
+      if (!containerRow) {
+        endpoint = "/containers";
         httpVerb = "POST";
         payload = {
           ...values,
@@ -115,15 +116,28 @@ export const EditForm = ({
         className="flex flex-col space-y-2 sm:px-0 px-4"
       >
         <FormField
-          name="orderNumber"
+          name="complete"
+          control={form.control}
+          render={({ field }: { field: any }) => (
+            <FormItem className="col-span-2 md:col-span-1 align-middle">
+              <FormLabel className="mr-2">Complete:</FormLabel>
+              <FormControl>
+                <Switch id="complete" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          name="containerId"
           control={form.control}
           render={({ field }: { field: any }) => (
             <FormItem className="col-span-2 md:col-span-1">
-              <FormLabel>Order No</FormLabel>
+              <FormLabel>Container Id</FormLabel>
               <FormControl>
                 <Input
                   {...field}
-                  placeholder="1234"
+                  placeholder="XX1234"
                   className="text-md"
                   required
                   autoFocus
@@ -134,53 +148,18 @@ export const EditForm = ({
           )}
         />
         <FormField
-          name="forPurchasing"
+          name="value"
           control={form.control}
           render={({ field }: { field: any }) => (
             <FormItem className="col-span-2 md:col-span-1">
-              <FormLabel>For Purchasing</FormLabel>
+              <FormLabel>Value £</FormLabel>
               <FormControl>
                 <Input
                   {...field}
-                  placeholder="0.275"
+                  placeholder="1234.00"
                   className="text-md"
                   required
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          name="productCode"
-          control={form.control}
-          render={({ field }: { field: any }) => (
-            <FormItem className="col-span-2 md:col-span-1">
-              <FormLabel>Product Code</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  placeholder="IBC-K150-02 (PC)"
-                  className="text-md"
-                  required
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          name="customer"
-          control={form.control}
-          render={({ field }: { field: any }) => (
-            <FormItem className="col-span-2 md:col-span-1">
-              <FormLabel>Customer</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  placeholder="MB Games Ltd"
-                  className="text-md"
-                  required
+                  autoFocus
                 />
               </FormControl>
               <FormMessage />

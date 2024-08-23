@@ -5,7 +5,7 @@ const ContainerCard= ({
 }) => {
   
   return (
-    <div className="p-3 m-2.5 shadow border-2 rounded flex flex-col justify-left items-left">
+    <div className="p-3 m-1.5 shadow border-2 rounded flex flex-col justify-left items-left">
       {children}
     </div>
   );

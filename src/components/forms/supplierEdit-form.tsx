@@ -7,7 +7,6 @@ import {Supplier, ResponseMessage} from '@/lib/utils/dataTypes';
 import { getUserProfileData } from '@/services/profile.service';
 
 import { Button } from '@/components/ui/button';
-import { ToastAction } from "@/components/ui/toast";
 import { useToast} from '@/components/ui/use-toast';
 import {
   Form,
@@ -20,7 +19,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, Router } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
