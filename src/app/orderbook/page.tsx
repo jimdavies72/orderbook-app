@@ -15,7 +15,6 @@ const OrderBook = withPageAuthRequired(async () => {
   }
 
   const data = response.suppliers;
-  console.log("data: ", data)
   
   return (
     <SupplierList suppliers={data} />

@@ -53,10 +53,10 @@ const Navbar = () => {
                     className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 "
                   >
                     <Button variant="ghost" asChild>
-                      <Link href="/suppliers">
+                      <Link href="/orderbook">
                         <IconMenu
-                          text="Suppliers"
-                          icon={<Building className="h-4 w-4" />}
+                          text="Orderbook"
+                          icon={<Ship className="h-4 w-4" />}
                         />
                       </Link>
                     </Button>
@@ -66,10 +66,10 @@ const Navbar = () => {
                     className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 "
                   >
                     <Button variant="ghost" asChild>
-                      <Link href="/orderbook">
+                      <Link href="/suppliers">
                         <IconMenu
-                          text="Orderbook"
-                          icon={<Ship className="h-4 w-4" />}
+                          text="Suppliers"
+                          icon={<Building className="h-4 w-4" />}
                         />
                       </Link>
                     </Button>
@@ -85,9 +85,7 @@ const Navbar = () => {
               >
                 {user ? (
                   <Button variant="ghost" asChild>
-                    <Link
-                      href="/api/auth/logout"
-                    >
+                    <Link href="/api/auth/logout">
                       <IconMenu
                         text="Sign Out"
                         icon={<LockKeyhole className="h-4 w-4" />}

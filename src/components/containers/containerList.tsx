@@ -15,6 +15,7 @@ import IconMenu from "@/components/icon-menu";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 const ContainerList = ({
   supplierId
@@ -27,25 +28,30 @@ const ContainerList = ({
   const [bool, setBool] = useState<boolean>(false);
   const [orders, setOrders] = useState<Orders>([{}] as Orders);
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [cId, setCId] = useState<string>("");
+  const [includeComplete, setIncludeComplete] = useState(false);
 
   const getContainers = async () => {
     const response: ContainersList = await httpRequest(
       "/containers",
-      { filterKey: "supplier", filterValue: supplierId },
-      "PATCH"
+      { 
+        filterKey: "supplier", 
+        filterValue: supplierId,
+        includeComplete: includeComplete
+      },
+      "PATCH",
+      {cache: "no-store"}
+
     );
 
     if (!response) {
       throw new Error("Failed to fetch data");
     }
-    
+
     setContainers(response.containers);
   };
 
   const containerHandler = (containerId: string) => { 
-    setActive(containerId)
-
+    
     let container: Container | undefined = undefined;
     if (containers) {
       container = containers.find((c: Container) => containerId === c._id);
@@ -54,18 +60,18 @@ const ContainerList = ({
     if (container){
       //enable Add Comment button
       setBool(true);
-      setCId(containerId);
+      setActive(containerId);
 
       if (container.comments.length > 0) {
         setContainerComments(container.comments as Comments);
       } else {
         setContainerComments([{}] as Comments);
-      }
+      };
       if (container.orders.length > 0) {
         setOrders(container.orders as Orders);
       } else {
         setOrders([{}] as Orders);
-      }
+      };
     }; 
   };
 
@@ -75,7 +81,7 @@ const ContainerList = ({
     if (supplierId !== "") {
       getContainers();
     }
-  }, [supplierId]); 
+  }, [supplierId, includeComplete]); 
 
   return (
     <div className="grid grid-cols-10">
@@ -87,41 +93,54 @@ const ContainerList = ({
           description="Add new Container"
         >
           <EditForm
-            containerId={cId}
+            supplierId={supplierId}
+            containerId={active}
             setIsOpen={setIsEditOpen}
           />
         </ResponsiveDialog>
         <ContainerCard>
-          <div className="flex flex-row items-center justify-between">
-            <Button
-              variant="outline"
-              onClick={() => {
-                setIsEditOpen(true);
-              }}
-              className="rounded-md p-2 hover:bg-neutral-100"
-            >
-              <IconMenu
-                text="Add Container"
-                icon={<LucideContainer className="h-5 w-5" />}
-              />
-            </Button>
+          <div className="border-b-2 flex flex-row items-center justify-between">
+            <div className="mb-2">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsEditOpen(true);
+                }}
+                className="rounded-md p-2 hover:bg-neutral-100"
+              >
+                <IconMenu
+                  text="Add Container"
+                  icon={<LucideContainer className="h-5 w-5" />}
+                />
+              </Button>
+            </div>
             <div className="flex items-center space-x-2">
-              <Switch id="include-complete" />
+              <Switch
+                id="include-complete"
+                onCheckedChange={() => setIncludeComplete(!includeComplete)}
+              />
               <Label htmlFor="include-complete">Inc. Complete</Label>
             </div>
           </div>
-          {containers ? (
-            containers.map((container: Container, index) => (
-              <ContainerComponent
-                key={index}
-                activeContainer={active}
-                containerHandler={containerHandler}
-                container={container}
-              />
-            ))
-          ) : (
-            <SuchEmpty hasBorder={false} />
-          )}
+          <ScrollArea className="h-[215px] mt-1">
+            <div className="mr-4">
+              {containers ? (
+                containers.map((container: Container, index) => (
+                  <ContainerComponent
+                    key={index}
+                    activeContainer={active}
+                    containerHandler={containerHandler}
+                    container={container}
+                  />
+                ))
+              ) : (
+                <div className="flex justify-center items-center h-[22vh]">
+                  <SuchEmpty hasBorder={false} />
+                </div>
+              )}
+            </div>
+            <ScrollBar orientation="vertical" />
+          </ScrollArea>
         </ContainerCard>
         <div>
           <ContainerCard>
@@ -134,7 +153,11 @@ const ContainerList = ({
         </div>
       </div>
       <div className="col-span-6">
-        <OrderList orders={orders} />
+        <OrderList 
+          supplier={supplierId} 
+          container={active} 
+          orders={orders} 
+        />
       </div>
     </div>
   );

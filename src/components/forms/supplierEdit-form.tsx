@@ -2,7 +2,7 @@
 import {useRouter} from 'next/navigation';
 import { httpRequest } from '@/lib/utils/dataHelpers';
 import { getInitials } from '@/lib/utils/helperFunctions';
-import React, { Dispatch, ReactNode, SetStateAction, useState, FormEvent } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import {Supplier, ResponseMessage} from '@/lib/utils/dataTypes';
 import { getUserProfileData } from '@/services/profile.service';
 

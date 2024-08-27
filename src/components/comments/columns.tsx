@@ -7,6 +7,9 @@ import { DataTableRowActions } from './data-table-row-actions';
 export const columns: ColumnDef<Comment>[] = [
   {
     accessorKey: "comment",
+    size: 400,
+    enableResizing: true,
+    minSize: 200,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Comment" />
     ),

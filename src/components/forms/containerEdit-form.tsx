@@ -1,4 +1,5 @@
 'use client';
+import { useState } from "react";
 import {useRouter} from 'next/navigation';
 import { httpRequest } from '@/lib/utils/dataHelpers';
 import { getInitials } from '@/lib/utils/helperFunctions';
@@ -24,17 +25,20 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 const formSchema = z.object({
-  containerId: z.string().min(1),
+  containerId: z.string().min(3),
+  containerNumber: z.string().min(1),
   complete: z.boolean().default(false),
-  value: z.number().min(0),
+  value: z.coerce.number().min(0).default(0),
 });
 
 export const EditForm = ({
   setIsOpen,
+  supplierId,
   containerId,
   containerRow,
 }: {
   setIsOpen: Dispatch<SetStateAction<boolean>>,
+  supplierId: string,
   containerId: string,
   containerRow?: Container | null
 }) =>{
@@ -45,8 +49,9 @@ export const EditForm = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       containerId: containerRow?.containerId || "",
-      complete: containerRow?.complete || false,
-      value: containerRow?.value|| 0,
+      containerNumber: containerRow?.containerNumber || "",
+      complete: containerRow?.complete,
+      value: containerRow?.value || 0 ,
     },
   });
 
@@ -64,7 +69,7 @@ export const EditForm = ({
       payload = {
         filterKey: "_id",
         filterValue: containerId,
-        supplier: {
+        data: {
           ...values,
           updatedBy: inits,
         },
@@ -75,6 +80,7 @@ export const EditForm = ({
         endpoint = "/containers";
         httpVerb = "POST";
         payload = {
+          supplier: supplierId,
           ...values,
           createdBy: inits,
           updatedBy: inits,
@@ -122,7 +128,12 @@ export const EditForm = ({
             <FormItem className="col-span-2 md:col-span-1 align-middle">
               <FormLabel className="mr-2">Complete:</FormLabel>
               <FormControl>
-                <Switch id="complete" />
+                <Switch
+                  {...field}
+                  id="complete"
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -134,6 +145,25 @@ export const EditForm = ({
           render={({ field }: { field: any }) => (
             <FormItem className="col-span-2 md:col-span-1">
               <FormLabel>Container Id</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder="123"
+                  className="text-md"
+                  required
+                  autoFocus
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          name="containerNumber"
+          control={form.control}
+          render={({ field }: { field: any }) => (
+            <FormItem className="col-span-2 md:col-span-1">
+              <FormLabel>Container Number</FormLabel>
               <FormControl>
                 <Input
                   {...field}
@@ -156,7 +186,7 @@ export const EditForm = ({
               <FormControl>
                 <Input
                   {...field}
-                  placeholder="1234.00"
+                  type="number"
                   className="text-md"
                   required
                   autoFocus
@@ -166,7 +196,6 @@ export const EditForm = ({
             </FormItem>
           )}
         />
-
         <div className="flex w-full sm:justify-end mt-4">
           <Button
             type="submit"

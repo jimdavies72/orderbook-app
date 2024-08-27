@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Comments, Comment} from "@/lib/utils/dataTypes";
+import { Comment } from "@/lib/utils/dataTypes";
 
 import DeleteForm from "@/components/forms/delete-form";
 import EditForm from "@/components/forms/commentEdit-form";
@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Row } from "@tanstack/react-table";
 import { MoreHorizontal, SquarePen, Trash2 } from "lucide-react";
-import { arrayOutputType } from "zod";
 
 interface WithData<T> {
   _id: string;
@@ -61,12 +60,15 @@ export function DataTableRowActions<TData extends WithData<Comment>>({
       <ResponsiveDialog
         isOpen={isDeleteOpen}
         setIsOpen={setIsDeleteOpen}
-        title="Delete Order"
-        description="Are you sure you want to delete this Order?"
+        title="Delete Comment"
+        description="Are you sure you want to delete this comment?"
       >
-        <DeleteForm cardId={cardId} setIsOpen={setIsDeleteOpen} />
+        <DeleteForm 
+          cardId={cardId} 
+          setIsOpen={setIsDeleteOpen} 
+          route="comments"
+        />
       </ResponsiveDialog>
-
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">

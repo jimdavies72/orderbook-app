@@ -41,7 +41,7 @@ type Order = {
   productType: string,
   quantity: number,
   unitWeight: number,
-  totleWeight: number,
+  totalWeight: number,
   ukRequiredDate: string,
   orderPlacedDate: string,
   orderReceived: boolean,
@@ -53,7 +53,9 @@ type Order = {
   artworkSaved: string,
   comments: Comments,
   createdBy: string,
-  updatedBy: string
+  createdAt: string,
+  updatedBy: string,
+  updatedAt: string
 }
 
 type Orders = [
@@ -62,6 +64,7 @@ type Orders = [
 
 type Container = {
   _id: string,
+  supplier: string,
   containerId: string,
   complete: boolean,
   orders: Orders,

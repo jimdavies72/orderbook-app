@@ -15,7 +15,7 @@ export const SupplierButtonRibbon = ({
   const [activeButton, setActiveButton] = useState<string>("");
 
   return (
-    <div className="ml-8 mr-8 mb-2 rounded border p-2 flex shadow-md shadow-gray-500 items-center justify-evenly">
+    <div className="ml-6 mr-6 mb-3 rounded border flex shadow-md shadow-gray-500 items-center justify-evenly">
       <ScrollArea className="p-2 cursor-grabbing">
         <div className="flex flex-row gap-3 items-center justify-center shadow-md">
           {supplierList &&

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Orders, Order } from "@/lib/utils/dataTypes";
+import { useEffect, useState } from "react";
+import { Orders } from "@/lib/utils/dataTypes";
 
 import { DataTablePagination } from "@/components/pagination";
 import { ResponsiveDialog } from "@/components/responsive-dialog";
@@ -33,6 +33,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  RowSelection,
   SortingState,
   useReactTable,
   VisibilityState,
@@ -40,7 +41,17 @@ import {
 
 import { columns } from "./columns";
 
-export const DataTable = ({ data }: { data: Orders }) => {
+export const DataTable = ({
+  supplier,
+  container,
+  data,
+  orderHandler,
+}: {
+  supplier: string;
+  container: string;
+  data: Orders;
+  orderHandler: (orderId: string) => void;
+}) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -58,6 +69,8 @@ export const DataTable = ({ data }: { data: Orders }) => {
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    enableMultiRowSelection: false,
+    enableRowSelection: true,
     state: {
       sorting,
       columnFilters,
@@ -69,7 +82,17 @@ export const DataTable = ({ data }: { data: Orders }) => {
         pageSize: 10, //custom default page size
       },
     },
+    getRowId: row => row._id,
   });
+
+  useEffect(() => {
+    if (rowSelection !== undefined) {
+      const orderId = Object.keys(rowSelection)[0]
+      if (orderId !== "") {
+        orderHandler(orderId);
+      }
+    }
+  }, [rowSelection]);
 
   return (
     <div className="w-full">
@@ -80,11 +103,17 @@ export const DataTable = ({ data }: { data: Orders }) => {
           title="Add Order"
           description="Add new Order"
         >
-          <EditForm setIsOpen={setIsEditOpen} />
+          <EditForm
+            setIsOpen={setIsEditOpen}
+            supplier={supplier}
+            container={container}
+          />
         </ResponsiveDialog>
         <Input
           placeholder="Search..."
-          value={(table.getColumn("orderNumber")?.getFilterValue() as string) ?? ""}
+          value={
+            (table.getColumn("orderNumber")?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
             table.getColumn("orderNumber")?.setFilterValue(event.target.value)
           }
@@ -155,6 +184,8 @@ export const DataTable = ({ data }: { data: Orders }) => {
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className={row.getIsSelected() ? 'selected hover:cursor-pointer font-bold ' : ' hover:cursor-pointer hover:bg-slate-200'}
+                  onClick={row.getToggleSelectedHandler()}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

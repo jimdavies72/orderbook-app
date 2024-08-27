@@ -17,12 +17,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Row } from "@tanstack/react-table";
 import { MoreHorizontal, SquarePen, Trash2 } from "lucide-react";
-import { arrayOutputType } from "zod";
 
 interface WithData<T> {
   _id: string;
-  container: object;
-  supplier: object;
+  container: string;
+  supplier: string;
   orderNumber: string;
   forPurchasing: number;
   productCode: string;
@@ -30,7 +29,7 @@ interface WithData<T> {
   productType: string;
   quantity: number;
   unitWeight: number;
-  totleWeight: number;
+  totalWeight: number;
   ukRequiredDate: string;
   orderPlacedDate: string;
   orderReceived: boolean;
@@ -42,7 +41,9 @@ interface WithData<T> {
   artworkSaved: string;
   comments: Comments;
   createdBy: string;
+  createdAt: string;
   updatedBy: string;
+  updatedAt: string;
 }
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -64,15 +65,24 @@ export function DataTableRowActions<TData extends WithData<Order>>({
         title="Edit Order"
         description="Edit this Order"
       >
-        <EditForm setIsOpen={setIsEditOpen} orderRow={orderRow} />
+        <EditForm
+          setIsOpen={setIsEditOpen}
+          container={orderRow.container}
+          supplier={orderRow.supplier}
+          orderRow={orderRow}
+        />
       </ResponsiveDialog>
       <ResponsiveDialog
         isOpen={isDeleteOpen}
         setIsOpen={setIsDeleteOpen}
         title="Delete Order"
-        description="Are you sure you want to delete this Order?"
+        description="Are you sure you want to delete this order? The action cannot be undone."
       >
-        <DeleteForm cardId={cardId} setIsOpen={setIsDeleteOpen} />
+        <DeleteForm
+          cardId={cardId}
+          setIsOpen={setIsDeleteOpen}
+          route="orders"
+        />
       </ResponsiveDialog>
 
       <DropdownMenu>

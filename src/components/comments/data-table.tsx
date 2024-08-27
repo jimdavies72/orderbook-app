@@ -102,7 +102,7 @@ export const DataTable = ({
             onClick={() => {
               setIsEditOpen(true);
             }}
-            className="ml-4 rounded-md p-2 hover:bg-neutral-100"
+            className="rounded-md p-2 hover:bg-neutral-100"
             >
             <IconMenu
               text="Add Comment"

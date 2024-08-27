@@ -50,10 +50,14 @@ export function DataTableRowActions<TData extends WithData<Supplier>>({
       <ResponsiveDialog
         isOpen={isDeleteOpen}
         setIsOpen={setIsDeleteOpen}
-        title="Delete Person"
-        description="Are you sure you want to delete this person?"
+        title="Delete Supplier"
+        description="Are you sure you want to delete this supplier?"
       >
-        <DeleteForm cardId={cardId} setIsOpen={setIsDeleteOpen} />
+        <DeleteForm 
+          cardId={cardId} 
+          setIsOpen={setIsDeleteOpen}
+          route="suppliers" 
+        />
       </ResponsiveDialog>
 
       <DropdownMenu>

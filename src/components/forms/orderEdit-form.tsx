@@ -24,15 +24,19 @@ import * as z from 'zod';
 
 const formSchema = z.object({
   orderNumber: z.string().min(1),
-  forPurchasing: z.number().min(1),
+  forPurchasing: z.coerce.number().min(0),
   productCode: z.string().min(1),
   customer: z.string().min(1),
 });
 
 export const EditForm = ({
+  supplier,
+  container,
   setIsOpen,
   orderRow,
 }: {
+  supplier: string,
+  container: string,
   setIsOpen: Dispatch<SetStateAction<boolean>>,
   orderRow?: Order | null
 }) =>{
@@ -43,7 +47,7 @@ export const EditForm = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       orderNumber: orderRow?.orderNumber || "",
-      forPurchasing: orderRow?.forPurchasing || undefined,
+      forPurchasing: orderRow?.forPurchasing || 0,
       productCode: orderRow?.productCode || "",
       customer: orderRow?.customer || "",
     },
@@ -56,14 +60,14 @@ export const EditForm = ({
       const inits: string = getInitials(user.name);
       
       // default is assumed to be edit doc route
-      let endpoint = "/orders";
+      let endpoint = "/orders/update";
       let httpVerb = "PUT";
       let payload = {};
       
       payload = {
         filterKey: "_id",
         filterValue: orderRow?._id,
-        data: {
+        order: {
           ...values,
           updatedBy: inits,
         },
@@ -74,6 +78,8 @@ export const EditForm = ({
         endpoint = "/orders";
         httpVerb = "POST";
         payload = {
+          container: container,
+          supplier: supplier,
           ...values,
           createdBy: inits,
           updatedBy: inits,
