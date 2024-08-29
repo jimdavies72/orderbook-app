@@ -1,6 +1,7 @@
 'use server';
 'server-only';
 import { getAccessToken } from "@auth0/nextjs-auth0";
+import { AppSettings } from "@/lib/utils/dataTypes";
 
 const createEndpoint = (endpoint: string) => {
   if (endpoint.length === 0) {
@@ -69,7 +70,9 @@ export const httpRequest = async (
     if (response.statusText === "No Content") {
       return null;
     } else if (response) {
-      return response.json();
+      let data = await response.json();
+      data.status = response.status;
+      return data;
     }
     throw new URIError("failed to fetch data");
 
@@ -78,6 +81,32 @@ export const httpRequest = async (
       error: { message: error.message }
     }
   }
+};
+
+export const getAppSettings = async () => {
+  try {
+    const appId = process.env.APP_ID || "";
+
+    const response: AppSettings = await httpRequest(
+      "/appsetting",
+      { appId: appId },
+      "PATCH"
+    );
+
+    if (response.status !== 200) {
+      throw new Error("Failed to fetch data");
+    }
+
+    return {
+      appData: response.appSettings[0],
+      appId: appId
+    };
+
+  } catch (error: any) {
+    return {
+      error: { message: error.message },
+    }
+  };
 };
 
 export const getDate = async (dateString: string) => {

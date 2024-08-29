@@ -1,10 +1,18 @@
 "use client";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import Link from "next/link";
+
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { ModeToggle } from "@/components/lightDark/theme-toggle";
 import IconMenu from "@/components/icon-menu";
-import { LockKeyholeOpen, LockKeyhole, Building, Ship, House } from "lucide-react";
+import {
+  LockKeyholeOpen,
+  LockKeyhole,
+  Building,
+  Ship,
+  House,
+  Settings,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -14,9 +22,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const Navbar = () => {
+const NavbarComponent = ({
+  companyName
+}: {
+  companyName?: string | ""
+}) => {
   const { user } = useUser();
-  
+   
   return (
     <div className="flex items-center justify-between p-4 mt-4 mb-4 w-[90%] border-solid border rounded shadow-md shadow-gray-500">
       <div className="flex flex-row items-center justify-center">
@@ -37,7 +49,7 @@ const Navbar = () => {
                 <div>
                   <DropdownMenuItem
                     asChild
-                    className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 "
+                    className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 cursor-pointer"
                   >
                     <Button variant="ghost" asChild>
                       <Link href="/">
@@ -50,7 +62,7 @@ const Navbar = () => {
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     asChild
-                    className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 "
+                    className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 cursor-pointer"
                   >
                     <Button variant="ghost" asChild>
                       <Link href="/orderbook">
@@ -63,13 +75,26 @@ const Navbar = () => {
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     asChild
-                    className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 "
+                    className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 cursor-pointer"
                   >
                     <Button variant="ghost" asChild>
                       <Link href="/suppliers">
                         <IconMenu
                           text="Suppliers"
                           icon={<Building className="h-4 w-4" />}
+                        />
+                      </Link>
+                    </Button>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    asChild
+                    className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 cursor-pointer"
+                  >
+                    <Button variant="ghost" asChild>
+                      <Link href="/settings">
+                        <IconMenu
+                          text="Settings"
+                          icon={<Settings className="h-4 w-4" />}
                         />
                       </Link>
                     </Button>
@@ -81,7 +106,7 @@ const Navbar = () => {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 asChild
-                className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 "
+                className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 cursor-pointer"
               >
                 {user ? (
                   <Button variant="ghost" asChild>
@@ -107,7 +132,7 @@ const Navbar = () => {
           </DropdownMenu>
         </div>
 
-        <p className="font-bold">Weir & Carmichael Orderbook</p>
+        <p className="font-bold">{companyName} Orderbook</p>
       </div>
       <div className="flex flex-row items-center justify-center">
         <div className="mr-4">
@@ -147,4 +172,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default NavbarComponent;

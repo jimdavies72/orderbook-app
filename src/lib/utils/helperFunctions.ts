@@ -16,4 +16,12 @@ export const getInitials = (name: string): string => {
     .join("")
     .toUpperCase();
   return initials;
+};
+
+export const properCase = (str: string): string => {
+  return str
+    .toLowerCase()
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 }

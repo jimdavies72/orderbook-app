@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { ThemeProvider } from "@/components/lightDark/theme-provider";
-import Navbar from "@/components/navbar/Navbar";
+import Navbar from "@/app/@navbar/page"
 import { Toaster } from "@/components/ui/toaster";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Orderbook",
-  description: "Weir & Carmichael Orderbook App",
+  description: "Orderbook App",
 };
 
 export default function RootLayout({

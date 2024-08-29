@@ -97,9 +97,36 @@ type ErrorProps = {
 };
 
 type ResponseMessage = {
+  status: number,
   title: string,
   message: string
 };
+
+type AppSetting = {
+  companyName: string
+}
+
+type AppSettings = {
+  appSettings:[
+    AppSetting
+  ],
+  status: number
+};
+
+type Audit = {
+  _id: string,
+  model: string,
+  identifier: string,
+  action: string,
+  reason: string,
+  userId: string,
+  createdBy: string,
+  createdAt: string
+};
+
+type Audits = [
+  Audit
+];
 
 //Person is a test type
 type Person = {
@@ -110,4 +137,4 @@ type Person = {
   image: string
 };
 
-export type { SupplierSummary, ContainersList, Suppliers, Supplier, Containers, Container, Orders, Order, Comments, Comment, ErrorProps, ResponseMessage, Person };
+export type { SupplierSummary, ContainersList, Suppliers, Supplier, Containers, Container, Orders, Order, Comments, Comment, ErrorProps, ResponseMessage, AppSetting, AppSettings, Audit, Audits, Person };

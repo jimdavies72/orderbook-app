@@ -63,6 +63,7 @@ export const ContainerComponent = ({
         <DeleteForm
           cardId={container._id}
           setIsOpen={setIsDeleteOpen}
+          identifier={container.containerId}
           route="containers"
         />
       </ResponsiveDialog>

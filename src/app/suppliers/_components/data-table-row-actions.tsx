@@ -56,6 +56,7 @@ export function DataTableRowActions<TData extends WithData<Supplier>>({
         <DeleteForm 
           cardId={cardId} 
           setIsOpen={setIsDeleteOpen}
+          identifier={row.original.name}
           route="suppliers" 
         />
       </ResponsiveDialog>

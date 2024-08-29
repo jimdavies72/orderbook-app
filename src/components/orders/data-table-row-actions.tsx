@@ -81,6 +81,7 @@ export function DataTableRowActions<TData extends WithData<Order>>({
         <DeleteForm
           cardId={cardId}
           setIsOpen={setIsDeleteOpen}
+          identifier={row.original.orderNumber}
           route="orders"
         />
       </ResponsiveDialog>

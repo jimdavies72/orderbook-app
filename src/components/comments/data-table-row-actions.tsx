@@ -66,6 +66,7 @@ export function DataTableRowActions<TData extends WithData<Comment>>({
         <DeleteForm 
           cardId={cardId} 
           setIsOpen={setIsDeleteOpen} 
+          identifier={row.original.comment}
           route="comments"
         />
       </ResponsiveDialog>
