@@ -1,4 +1,4 @@
-import {useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Container } from "@/lib/utils/dataTypes";
 import Card from "@/components/card";
 
@@ -21,11 +21,11 @@ import {
 export const ContainerComponent = ({
   activeContainer,
   container,
-  containerHandler,
+  commentAndOrderHandler,
 }: {
-  activeContainer: string,
-  container: Container,
-  containerHandler: (containerId: string) => void,
+  activeContainer: string;
+  container: Container;
+  commentAndOrderHandler: (containerId: string) => void;
 }) => {
   const [activeStyle, setActiveStyle] = useState<string>("");
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -33,11 +33,11 @@ export const ContainerComponent = ({
 
   useEffect(() => {
     if (activeContainer === container._id) {
-      setActiveStyle("font-bold")
+      setActiveStyle("font-bold");
     } else {
-      setActiveStyle("")
+      setActiveStyle("");
     }
-  }, [activeContainer])
+  }, [activeContainer]);
 
   return (
     <>
@@ -45,7 +45,7 @@ export const ContainerComponent = ({
         isOpen={isEditOpen}
         setIsOpen={setIsEditOpen}
         title="Edit Container"
-        description="Edit this Container"
+        description={container.supplierContainerNumber + " - " + container.shippingContainerNumber}
       >
         <EditForm
           supplierId={container.supplier}
@@ -63,21 +63,40 @@ export const ContainerComponent = ({
         <DeleteForm
           cardId={container._id}
           setIsOpen={setIsDeleteOpen}
-          identifier={container.containerId}
+          identifier={container.supplierContainerNumber}
           route="containers"
         />
       </ResponsiveDialog>
       <Card>
         <div
-          onClick={() => containerHandler(container._id)}
+          onClick={() => commentAndOrderHandler(container._id)}
           className="relative"
         >
           {/* Card Content */}
           <div>
-            <h5 className={activeStyle}>
-              Container: {container.containerNumber}
-            </h5>
-            <p>Value: {container.value}</p>
+            <div className="flex items-center justify-normal gap-2">
+              <h5 className={activeStyle}>
+                Container: ({container.supplierContainerNumber})-
+                {container.shippingContainerNumber}
+              </h5>
+              {container.complete ? (
+                <p className="text-green-600 font-bold text-md">Complete</p> ) : (
+                  null )
+              }
+            </div>
+            {container.full ? (
+              <p className="text-red-600 font-bold text-lg">Full</p>
+            ) : (
+              <p className="text-red-600 font-bold text-md">Filling</p>
+            )}
+            <div className="flex gap-2 items-start justify-normal">
+              <p>Value: £{container.value}</p>
+              {container.addedToShippingForecast ? (
+                <p className="text-red-600 font-bold">SF Sheet</p>
+              ) : (
+                null
+              )}
+            </div>
           </div>
           {/* Dropdown Menu */}
           <div className="absolute right-0 top-0 z-10">
@@ -86,7 +105,7 @@ export const ContainerComponent = ({
                 <DropdownMenuTrigger asChild>
                   <Button
                     onClick={() => {
-                      containerHandler(container._id);
+                      commentAndOrderHandler(container._id);
                     }}
                     variant="ghost"
                     className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"

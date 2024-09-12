@@ -1,23 +1,23 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Suppliers } from "@/lib/utils/dataTypes";
+import { useState } from "react";
 
-import { DataTablePagination } from "@/components/pagination";
+import { Reminders } from "@/lib/utils/dataTypes";
+import EditForm from "@/components/forms/reminderEdit-form";
+
 import { ResponsiveDialog } from "@/components/responsive-dialog";
-import EditForm from "@/components/forms/supplierEdit-form";
-
 import { Button } from "@/components/ui/button";
-import { HousePlus, LayoutList, Cat } from "lucide-react";
+
+import { BellDot, LayoutList, Cat } from "lucide-react";
 import IconMenu from "@/components/icon-menu";
 
+import { DataTablePagination } from "@/components/pagination";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -38,14 +38,16 @@ import {
   VisibilityState,
 } from "@tanstack/react-table";
 
-import { columns } from "../_components/columns";
+import { columns } from "./columns";
 
-export const DataTable = ({ 
+export const DataTable = ({
+  showAddButton,
+  supplierId,
   data,
-  reminderHandler,
-}: { 
-  data: Suppliers,
-  reminderHandler: (supplierId: string) => void
+}: {
+  showAddButton: boolean;
+  supplierId: string;
+  data: Reminders;
 }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -64,8 +66,6 @@ export const DataTable = ({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    enableMultiRowSelection: false,
-    enableRowSelection: true,
     state: {
       sorting,
       columnFilters,
@@ -77,85 +77,62 @@ export const DataTable = ({
         pageSize: 5, //custom default page size
       },
     },
-    getRowId: (row) => row._id,
   });
-  
-  useEffect(() => {
-    if (rowSelection !== undefined) {
-      const supplierId = Object.keys(rowSelection)[0];
-      if (supplierId !== "") {
-        
-        reminderHandler(supplierId);
-      };
-    };
-  }, [rowSelection]);
 
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between py-4">
+      <div className="flex items-center py-4">
         <ResponsiveDialog
           isOpen={isEditOpen}
           setIsOpen={setIsEditOpen}
-          title="Add Supplier"
-          description="Add new supplier"
+          title="Add Reminder"
+          description="Add new Reminder"
         >
-          <EditForm setIsOpen={setIsEditOpen} />
+          <EditForm supplier={supplierId} setIsOpen={setIsEditOpen} />
         </ResponsiveDialog>
-        <Input
-          id="search"
-          placeholder="Search..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <div className="flex gap-4 ">
+        {!showAddButton ? null : (
           <Button
             variant="outline"
             onClick={() => {
               setIsEditOpen(true);
             }}
-            className="ml-4 rounded-md p-2 hover:bg-neutral-100"
+            className="rounded-md p-2 hover:bg-neutral-100"
           >
             <IconMenu
-              text="Add Supplier"
-              icon={<HousePlus className="h-4 w-4" />}
+              text="Add Reminder"
+              icon={<BellDot className="h-5 w-5" />}
             />
           </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
-                <IconMenu
-                  text="View"
-                  icon={<LayoutList className="h-4 w-4" />}
-                />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+        )}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="ml-auto">
+              <IconMenu text="View" icon={<LayoutList className="h-4 w-4" />} />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => {
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                );
+              })}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       <div className="rounded-md border">
-        <Table>
+        <Table className="h-7">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -180,12 +157,6 @@ export const DataTable = ({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className={
-                    row.getIsSelected()
-                      ? "selected hover:cursor-pointer font-bold "
-                      : " hover:cursor-pointer hover:bg-slate-200"
-                  }
-                  onClick={row.getToggleSelectedHandler()}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

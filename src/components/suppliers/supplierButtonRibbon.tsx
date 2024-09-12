@@ -1,31 +1,35 @@
 'use client';
 import { useState } from "react";
-import { Suppliers } from "@/lib/utils/dataTypes";
+import { Suppliers, Supplier, Containers } from "@/lib/utils/dataTypes";
 
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 
 export const SupplierButtonRibbon = ({
-  supplierList,
-  supplierHandler
+  supplierData,
+  containerHandler
 }: {
-  supplierList: Suppliers,
-  supplierHandler: (supplierId: string) => void
+  supplierData: Suppliers,
+  containerHandler: (supplierId: string) => void
 }) => {
   const [activeButton, setActiveButton] = useState<string>("");
 
+  const getActiveContainerCount = (containers:Containers) => {
+    return containers.filter((container) => container.complete === false).length
+  }
+
   return (
-    <div className="ml-6 mr-6 mb-3 rounded border flex shadow-md shadow-gray-500 items-center justify-evenly">
+    <div className=" ml-6 mr-6 mb-0.5 shadow-md shadow-gray-500 rounded-t-lg border flex items-center justify-evenly">
       <ScrollArea className="p-2 cursor-grabbing">
         <div className="flex flex-row gap-3 items-center justify-center shadow-md">
-          {supplierList &&
-            supplierList.map((supplier: any) => (
+          {supplierData &&
+            supplierData.map((supplier: Supplier) => (
               <Button
                 key={supplier._id}
                 variant="outline"
                 onClick={() => {
                   setActiveButton(supplier._id);
-                  supplierHandler(supplier._id);
+                  containerHandler(supplier._id);
                 }}
                 className={
                   supplier._id === activeButton
@@ -33,7 +37,7 @@ export const SupplierButtonRibbon = ({
                     : "rounded mt-1 mb-2 hover:bg-gray-200 shadow shadow-gray-400"
                 }
               >
-                {supplier.name} ({supplier.activeContainerCount})
+                {supplier.name} ({getActiveContainerCount(supplier.containers)})
               </Button>
             ))}
         </div>

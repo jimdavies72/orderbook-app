@@ -4,30 +4,9 @@ import { ColumnDef } from '@tanstack/react-table';
 import { DataTableColumnHeader } from './data-table-column-header';
 import { DataTableRowActions } from './data-table-row-actions';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Switch } from '@/components/ui/switch';
 
 export const columns: ColumnDef<Supplier>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
   {
     accessorKey: "supplierId",
     header: ({ column }) => (
@@ -57,9 +36,7 @@ export const columns: ColumnDef<Supplier>[] = [
       <DataTableColumnHeader column={column} title="Enabled" />
     ),
     cell: ({ row }) => (
-      <div>
-        <Checkbox checked={row.getValue("enabled")} />
-      </div>
+      <Switch checked={row.getValue("enabled")} />
     ),
   },
   {

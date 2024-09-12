@@ -4,14 +4,12 @@ import { httpRequest } from "@/lib/utils/dataHelpers";
 import { getInitials } from "@/lib/utils/helperFunctions";
 import React, {
   Dispatch,
-  ReactNode,
   SetStateAction,
-  useState,
-  FormEvent,
 } from "react";
-import { Comment, ResponseMessage } from "@/lib/utils/dataTypes";
+import { Reminder, ResponseMessage } from "@/lib/utils/dataTypes";
 import { getUserProfileData } from "@/services/profile.service";
 
+import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -29,19 +27,18 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 const formSchema = z.object({
-  comment: z.string().min(1),
+  reminder: z.string().min(1),
+  enabled: z.boolean(),
 });
 
 export const EditForm = ({
-  orderId,
-  containerId,
+  supplier,
   setIsOpen,
-  commentRow,
+  reminderRow,
 }: {
-  orderId?: string;
-  containerId?: string;
+  supplier: string;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  commentRow?: Comment | null;
+  reminderRow?: Reminder | null;
 }) => {
   const router = useRouter();
   const { toast } = useToast();
@@ -49,7 +46,8 @@ export const EditForm = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      comment: commentRow?.comment || "",
+      reminder: reminderRow?.reminder || "",
+      enabled: reminderRow?.enabled || true,
     },
   });
 
@@ -59,21 +57,14 @@ export const EditForm = ({
       const user = await getUserProfileData();
       const inits: string = getInitials(user.name);
 
-      let parentId = {};
-      if (containerId) {
-        parentId = { container: containerId };
-      } else {
-        parentId = { order: orderId };
-      }
-
       // default is assumed to be edit doc route
-      let endpoint = "/comments/update";
+      let endpoint = "/reminders/update";
       let httpVerb = "PUT";
       let payload = {};
 
       payload = {
         filterKey: "_id",
-        filterValue: commentRow?._id,
+        filterValue: reminderRow?._id,
         data: {
           ...values,
           updatedBy: inits,
@@ -81,22 +72,24 @@ export const EditForm = ({
       };
 
       // come via the add doc route
-      if (!commentRow) {
-        endpoint = "/comments";
+      if (!reminderRow) {
+        endpoint = "/reminders";
         httpVerb = "POST";
         payload = {
+          supplier: supplier,
           ...values,
           userId: user.sub,
           createdBy: inits,
           updatedBy: inits,
-          ...parentId,
         };
       }
 
       const response: ResponseMessage = await httpRequest(
         endpoint,
         payload,
-        httpVerb
+        httpVerb,
+        null,
+        false
       );
 
       if (response) {
@@ -115,7 +108,7 @@ export const EditForm = ({
 
       router.refresh();
       setIsOpen(false);
-      
+
     } catch (error) {
       console.log(error);
     }
@@ -128,15 +121,33 @@ export const EditForm = ({
         className="flex flex-col space-y-2 sm:px-0 px-4"
       >
         <FormField
-          name="comment"
+          name="enabled"
+          control={form.control}
+          render={({ field }: { field: any }) => (
+            <FormItem className="col-span-2 md:col-span-1 align-middle">
+              <FormLabel htmlFor="enabled" className="mr-2">Enabled:</FormLabel>
+              <FormControl>
+                <Switch
+                  {...field}
+                  id="enabled"
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          name="reminder"
           control={form.control}
           render={({ field }: { field: any }) => (
             <FormItem className="col-span-2 md:col-span-1">
-              <FormLabel>Comment</FormLabel>
+              <FormLabel>Reminder</FormLabel>
               <FormControl>
                 <Textarea
                   {...field}
-                  placeholder="Enter comment here"
+                  placeholder="Enter reminder here"
                   className="text-md"
                   required
                   autoFocus

@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Reminders, Supplier } from "@/lib/utils/dataTypes";
+import { Reminder } from "@/lib/utils/dataTypes";
 
 import DeleteForm from "@/components/forms/delete-form";
-import EditForm from "@/components/forms/supplierEdit-form";
+import EditForm from "@/components/forms/reminderEdit-form";
 import IconMenu from "@/components/icon-menu";
 import { ResponsiveDialog } from "@/components/responsive-dialog";
 import { Button } from "@/components/ui/button";
@@ -20,51 +20,50 @@ import { MoreHorizontal, SquarePen, Trash2 } from "lucide-react";
 
 interface WithData<T> {
   _id: string;
-  supplierId: string;
-  reminders: Reminders;
-  name: string;
-  activeContainerCount: number;
+  supplier: string;
+  reminder: string;
   enabled: boolean;
 }
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
 }
 
-export function DataTableRowActions<TData extends WithData<Supplier>>({
+export function DataTableRowActions<TData extends WithData<Reminder>>({
   row,
 }: DataTableRowActionsProps<TData>) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const cardId = row.original._id as string;
-  const supplierRow = row.original as Supplier;
+  const supplierId = row.original.supplier as string;
+  const reminderId = row.original._id as string;
+  const reminderRow = row.original as Reminder;
 
   return (
     <>
       <ResponsiveDialog
         isOpen={isEditOpen}
         setIsOpen={setIsEditOpen}
-        title="Edit Supplier"
-        description="Edit this supplier"
+        title="Edit Reminder"
+        description="Edit this Reminder"
       >
-        <EditForm 
-          setIsOpen={setIsEditOpen} 
-          supplierRow={supplierRow} 
+        <EditForm
+          supplier={supplierId}
+          setIsOpen={setIsEditOpen}
+          reminderRow={reminderRow}
         />
       </ResponsiveDialog>
       <ResponsiveDialog
         isOpen={isDeleteOpen}
         setIsOpen={setIsDeleteOpen}
-        title="Delete Supplier"
-        description="Are you sure you want to delete this supplier?"
+        title="Delete Reminder"
+        description="Are you sure you want to delete this Reminder?"
       >
-        <DeleteForm 
-          cardId={cardId} 
+        <DeleteForm
+          cardId={reminderId}
           setIsOpen={setIsDeleteOpen}
-          identifier={row.original.name}
-          route="suppliers" 
+          identifier={row.original.reminder}
+          route="reminders"
         />
       </ResponsiveDialog>
-
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">

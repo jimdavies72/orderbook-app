@@ -38,7 +38,7 @@ export function DataTableRowActions<TData extends WithData<Comment>>({
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const orderId = row.original.order as string;
-  const containerId = row.original.container as string;
+  const supplierContainerNumber = row.original.container as string;
   const cardId = row.original._id as string;
   const commentRow = row.original as Comment;
 
@@ -52,7 +52,7 @@ export function DataTableRowActions<TData extends WithData<Comment>>({
       >
         <EditForm
           orderId={orderId}
-          containerId={containerId}
+          supplierContainerNumber={supplierContainerNumber}
           setIsOpen={setIsEditOpen}
           commentRow={commentRow}
         />
@@ -63,9 +63,9 @@ export function DataTableRowActions<TData extends WithData<Comment>>({
         title="Delete Comment"
         description="Are you sure you want to delete this comment?"
       >
-        <DeleteForm 
-          cardId={cardId} 
-          setIsOpen={setIsDeleteOpen} 
+        <DeleteForm
+          cardId={cardId}
+          setIsOpen={setIsDeleteOpen}
           identifier={row.original.comment}
           route="comments"
         />

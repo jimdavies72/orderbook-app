@@ -22,6 +22,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+import { Separator } from "@/components/ui/separator";
+
 const NavbarComponent = ({
   companyName
 }: {
@@ -104,6 +106,7 @@ const NavbarComponent = ({
                 <></>
               )}
               <DropdownMenuSeparator />
+              <Separator />
               <DropdownMenuItem
                 asChild
                 className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 cursor-pointer"
@@ -131,7 +134,6 @@ const NavbarComponent = ({
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-
         <p className="font-bold">{companyName} Orderbook</p>
       </div>
       <div className="flex flex-row items-center justify-center">

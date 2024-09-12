@@ -1,7 +1,9 @@
 'use server';
 'server-only';
 import { getAccessToken } from "@auth0/nextjs-auth0";
-import { AppSettings } from "@/lib/utils/dataTypes";
+import { PublicSettings, AppSettings } from "@/lib/utils/dataTypes";
+
+import { revalidatePath } from "next/cache";
 
 const createEndpoint = (endpoint: string) => {
   if (endpoint.length === 0) {
@@ -23,23 +25,27 @@ const createEndpoint = (endpoint: string) => {
 };
 
 export const getAuthToken = async () => {
-  const { accessToken } = await getAccessToken({}) || undefined;
+  try {
+    const { accessToken } = (await getAccessToken({}) || undefined);
 
-  if (accessToken) {
-    return `Bearer ${accessToken}`;
+    if (accessToken !== undefined) {
+      return `Bearer ${accessToken}`;
+    } 
+  
+    return undefined;
+    
+  } catch (error: any) {
+    return { error: error.message};
   };
-
-  return undefined;
-
-}
+};
 
 export const httpRequest = async (
   endpoint: string,
   payload: {} | null,
   httpVerb: string,
-  refreshType: {} | null = null
+  refreshType: {} | null = null,
+  isPublic: boolean = false
 ) => {
-
   try {
     const requestInit: RequestInit = {
       method: httpVerb,
@@ -50,14 +56,16 @@ export const httpRequest = async (
       body: payload ? JSON.stringify(payload) : null,
     };
 
-    const token = await getAuthToken();
-    if (token) {
-      requestInit.headers = { ...requestInit.headers, Authorization: token };
-    }
+    if (!isPublic) {
+      const token = await getAuthToken();
+      if (typeof token === "string" && token) {
+        requestInit.headers = { ...requestInit.headers, Authorization: token };
+      };
+    };
 
     if (refreshType) {
       Object.assign(requestInit, refreshType);
-    }
+    };
 
     const response = await fetch(createEndpoint(endpoint) || "", requestInit);
 
@@ -77,10 +85,8 @@ export const httpRequest = async (
     throw new URIError("failed to fetch data");
 
   } catch (error: any) {
-    return {
-      error: { message: error.message }
-    }
-  }
+    return { error: error.message }
+  };
 };
 
 export const getAppSettings = async () => {
@@ -106,6 +112,32 @@ export const getAppSettings = async () => {
     return {
       error: { message: error.message },
     }
+  };
+};
+
+export const getPublicSettings = async () => {
+  try {
+    const appId = process.env.APP_ID || "";
+
+    const response: PublicSettings = await httpRequest(
+      "/appsetting",
+      { appId: appId },
+      "PUT",
+      { cache: 'force-cache' },
+      true,
+    );
+
+    if (response.status !== 200) {
+      throw new Error("Failed to fetch data");
+    }
+    
+    return {
+      appData: response.appSettings[0],
+      appId: appId,
+    };
+    
+  } catch (error: any) {
+    return { error: error.message };
   };
 };
 

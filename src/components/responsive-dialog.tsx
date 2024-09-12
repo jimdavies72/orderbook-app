@@ -40,7 +40,7 @@ export function ResponsiveDialog({
     return (
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent
-          className="sm:max-w-[425px]"
+          className="sm:max-w-[435px] min-w-[60%]"
           onInteractOutside={(e) => {
             e.preventDefault();
           }}

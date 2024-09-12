@@ -1,13 +1,13 @@
-'use client';
-import {useRouter} from 'next/navigation';
-import { httpRequest } from '@/lib/utils/dataHelpers';
-import { getInitials } from '@/lib/utils/helperFunctions';
-import React, { Dispatch, ReactNode, SetStateAction, useState, FormEvent } from 'react';
-import {Order, ResponseMessage} from '@/lib/utils/dataTypes';
-import { getUserProfileData } from '@/services/profile.service';
+"use client";
+import { useRouter } from "next/navigation";
+import { httpRequest } from "@/lib/utils/dataHelpers";
+import { getInitials } from "@/lib/utils/helperFunctions";
+import React, { Dispatch, SetStateAction } from "react";
+import { Order, ResponseMessage } from "@/lib/utils/dataTypes";
+import { getUserProfileData } from "@/services/profile.service";
 
-import { Button } from '@/components/ui/button';
-import { useToast} from '@/components/ui/use-toast';
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 import {
   Form,
   FormControl,
@@ -15,16 +15,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2 } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
 const formSchema = z.object({
   orderNumber: z.string().min(1),
-  forPurchasing: z.coerce.number().min(0),
+  unitCostPrice: z.coerce.number().min(0),
   productCode: z.string().min(1),
   customer: z.string().min(1),
 });
@@ -35,11 +35,11 @@ export const EditForm = ({
   setIsOpen,
   orderRow,
 }: {
-  supplier: string,
-  container: string,
-  setIsOpen: Dispatch<SetStateAction<boolean>>,
-  orderRow?: Order | null
-}) =>{
+  supplier: string;
+  container: string;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  orderRow?: Order | null;
+}) => {
   const router = useRouter();
   const { toast } = useToast();
 
@@ -47,7 +47,7 @@ export const EditForm = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       orderNumber: orderRow?.orderNumber || "",
-      forPurchasing: orderRow?.forPurchasing || 0,
+      unitCostPrice: orderRow?.unitCostPrice || 0,
       productCode: orderRow?.productCode || "",
       customer: orderRow?.customer || "",
     },
@@ -58,12 +58,12 @@ export const EditForm = ({
     try {
       const user = await getUserProfileData();
       const inits: string = getInitials(user.name);
-      
+
       // default is assumed to be edit doc route
       let endpoint = "/orders/update";
       let httpVerb = "PUT";
       let payload = {};
-      
+
       payload = {
         filterKey: "_id",
         filterValue: orderRow?._id,
@@ -72,7 +72,7 @@ export const EditForm = ({
           updatedBy: inits,
         },
       };
-      
+
       // come via the add doc route
       if (!orderRow) {
         endpoint = "/orders";
@@ -85,7 +85,7 @@ export const EditForm = ({
           updatedBy: inits,
         };
       }
-      
+
       const response: ResponseMessage = await httpRequest(
         endpoint,
         payload,
@@ -93,7 +93,6 @@ export const EditForm = ({
       );
 
       if (response) {
-        router.refresh();
         toast({
           duration: 1500,
           title: response.title,
@@ -107,8 +106,9 @@ export const EditForm = ({
         });
       }
 
+      router.refresh();
       setIsOpen(false);
-
+      
     } catch (error) {
       console.log(error);
     }
@@ -132,6 +132,7 @@ export const EditForm = ({
                   placeholder="1234"
                   className="text-md"
                   required
+                  autoComplete="off"
                   autoFocus
                 />
               </FormControl>
@@ -140,16 +141,18 @@ export const EditForm = ({
           )}
         />
         <FormField
-          name="forPurchasing"
+          name="unitCostPrice"
           control={form.control}
           render={({ field }: { field: any }) => (
             <FormItem className="col-span-2 md:col-span-1">
-              <FormLabel>For Purchasing</FormLabel>
+              <FormLabel>Unit Price</FormLabel>
               <FormControl>
                 <Input
                   {...field}
+                  type="number"
                   placeholder="0.275"
                   className="text-md"
+                  autoComplete="off"
                   required
                 />
               </FormControl>
@@ -167,7 +170,8 @@ export const EditForm = ({
                 <Input
                   {...field}
                   placeholder="IBC-K150-02 (PC)"
-                  className="text-md"
+                  className="text-md uppercase"
+                  autoComplete="off"
                   required
                 />
               </FormControl>

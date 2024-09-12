@@ -5,6 +5,8 @@ import { Orders } from "@/lib/utils/dataTypes";
 
 import { DataTablePagination } from "@/components/pagination";
 import { ResponsiveDialog } from "@/components/responsive-dialog";
+
+import SuchEmpty from "../suchEmpty";
 import EditForm from "@/components/forms/orderEdit-form";
 
 import { Button } from "@/components/ui/button";
@@ -44,11 +46,13 @@ import { columns } from "./columns";
 export const DataTable = ({
   supplier,
   container,
+  showAddButton,
   data,
   orderHandler,
 }: {
   supplier: string;
   container: string;
+  showAddButton: boolean;
   data: Orders;
   orderHandler: (orderId: string) => void;
 }) => {
@@ -90,8 +94,8 @@ export const DataTable = ({
       const orderId = Object.keys(rowSelection)[0]
       if (orderId !== "") {
         orderHandler(orderId);
-      }
-    }
+      };
+    };
   }, [rowSelection]);
 
   return (
@@ -110,27 +114,30 @@ export const DataTable = ({
           />
         </ResponsiveDialog>
         <Input
-          placeholder="Search..."
+          id="orderNumberSearch"
+          placeholder="Search order number..."
           value={
             (table.getColumn("orderNumber")?.getFilterValue() as string) ?? ""
           }
           onChange={(event) =>
             table.getColumn("orderNumber")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm w-[50%]"
         />
-        <Button
-          variant="outline"
-          onClick={() => {
-            setIsEditOpen(true);
-          }}
-          className="ml-4 rounded-md p-2 hover:bg-neutral-100"
-        >
-          <IconMenu
-            text="Add Order"
-            icon={<FolderPlus className="h-4 w-4" />}
-          />
-        </Button>
+        {!showAddButton ? null : (
+          <Button
+            variant="outline"
+            onClick={() => {
+              setIsEditOpen(true);
+            }}
+            className="ml-4 rounded-md p-2 hover:bg-neutral-100"
+          >
+            <IconMenu
+              text="Add Order"
+              icon={<FolderPlus className="h-4 w-4" />}
+            />
+          </Button>
+        )}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
@@ -184,7 +191,11 @@ export const DataTable = ({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className={row.getIsSelected() ? 'selected hover:cursor-pointer font-bold ' : ' hover:cursor-pointer hover:bg-slate-200'}
+                  className={
+                    row.getIsSelected()
+                      ? "selected hover:cursor-pointer font-bold "
+                      : " hover:cursor-pointer hover:bg-slate-200"
+                  }
                   onClick={row.getToggleSelectedHandler()}
                 >
                   {row.getVisibleCells().map((cell) => (
@@ -203,7 +214,7 @@ export const DataTable = ({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  <SuchEmpty hasBorder={false} />
                 </TableCell>
               </TableRow>
             )}

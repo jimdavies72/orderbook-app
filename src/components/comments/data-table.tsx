@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Comments } from "@/lib/utils/dataTypes";
 
+import SuchEmpty from "../suchEmpty";
 import { ResponsiveDialog } from "@/components/responsive-dialog";
 import EditForm from "@/components/forms/commentEdit-form";
 
@@ -39,24 +40,25 @@ import {
 
 import { columns } from "./columns";
 
-export const DataTable = ({ 
+export const DataTable = ({
   showAddButton,
   orderId,
   containerId,
-  data 
-}: { 
-  showAddButton?: boolean,
-  orderId?: string,
-  containerId?: string,
-  data: Comments 
+  data,
+}: {
+  showAddButton?: boolean;
+  orderId?: string;
+  containerId?: string;
+  data: Comments;
 }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [sorting, setSorting] = useState<SortingState>([ 
-    { id: "createdAt", desc: true }
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: "createdAt", desc: true },
   ]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
-    createdAt: false, updatedAt: false
+    createdAt: false,
+    updatedAt: false,
   });
   const [rowSelection, setRowSelection] = useState({});
 
@@ -77,8 +79,7 @@ export const DataTable = ({
       columnVisibility,
       rowSelection,
     },
-    initialState: {
-    },
+    initialState: {},
   });
 
   return (
@@ -96,20 +97,20 @@ export const DataTable = ({
             setIsOpen={setIsEditOpen}
           />
         </ResponsiveDialog>
-        {!showAddButton ? null : (
+        {showAddButton ? (
           <Button
             variant="outline"
             onClick={() => {
               setIsEditOpen(true);
             }}
             className="rounded-md p-2 hover:bg-neutral-100"
-            >
+          >
             <IconMenu
               text="Add Comment"
               icon={<MessageSquarePlus className="h-5 w-5" />}
-              />
+            />
           </Button>
-        )}
+        ) : <>hello</>}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
@@ -180,7 +181,7 @@ export const DataTable = ({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  <SuchEmpty hasBorder={false} />
                 </TableCell>
               </TableRow>
             )}

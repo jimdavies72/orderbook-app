@@ -99,9 +99,9 @@ export const DataTable = ({
           <div className="mr-2">
             {table.getColumn("model") && (
               <DataTableFacetedFilter
-              column={table.getColumn("model")}
-              title="Model"
-              options={models}
+                column={table.getColumn("model")}
+                title="Model"
+                options={models}
               />
             )}
           </div>

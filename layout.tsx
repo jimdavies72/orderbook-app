@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { ThemeProvider } from "@/components/lightDark/theme-provider";
-import Navbar from "@/app/@navbar/page";
+import Navbar from "@/app/@navbar/page"
 import { Toaster } from "@/components/ui/toaster";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";

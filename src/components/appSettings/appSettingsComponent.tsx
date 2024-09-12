@@ -1,4 +1,5 @@
 "use client";
+import { useFormState } from "react-hook-form";
 import { DataTable } from "@/components/audit/data-table";
 import { getUserProfileData } from "@/services/profile.service";
 import { httpRequest } from "@/lib/utils/dataHelpers";
@@ -31,11 +32,12 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const formSchema = z.object({
   companyName: z.string().min(5),
+  defaultLeadTime: z.coerce.number().min(1).default(12),
+  defaultProductionTime: z.coerce.number().min(1).default(7),
 });
 
 export const AppSettingsComponent = ({
@@ -50,7 +52,9 @@ export const AppSettingsComponent = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      companyName: appSettingData?.companyName || "Enter name here"
+      companyName: appSettingData?.companyName || "Enter name here",
+      defaultLeadTime: appSettingData?.defaultLeadTime || 0,
+      defaultProductionTime: appSettingData?.defaultProductionTime || 0,
     },
   });
 
@@ -68,6 +72,8 @@ export const AppSettingsComponent = ({
         appId: appId,
         data: {
           companyName: values.companyName,
+          defaultLeadTime: values.defaultLeadTime,
+          defaultProductionTime: values.defaultProductionTime,
         }
       };
 
@@ -98,7 +104,7 @@ export const AppSettingsComponent = ({
 
         const payload = {
           model: "AppSettings",
-          identifier: values.companyName,
+          identifier: Object.keys(form.formState.dirtyFields).join(", "),
           reason: "update values",
           action: "update",
           userId: user.sub || "",
@@ -119,7 +125,7 @@ export const AppSettingsComponent = ({
   };
 
   return (
-    <Tabs defaultValue="settings" className="w-[800px]">
+    <Tabs defaultValue="settings" className="w-[1000px]">
       <TabsList className="grid w-full grid-cols-2 gap-4">
         <TabsTrigger value="settings">Settings</TabsTrigger>
         <TabsTrigger value="audit">Audit</TabsTrigger>
@@ -130,6 +136,7 @@ export const AppSettingsComponent = ({
             <form
               onSubmit={form.handleSubmit(onSubmit)}
               className="flex flex-col space-y-6 sm:px-0 px-4"
+              autoComplete="off"
             >
               <CardHeader>
                 <CardTitle>App Settings</CardTitle>
@@ -138,14 +145,16 @@ export const AppSettingsComponent = ({
                   done.
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="space-y-1">
+              <CardContent>
+                <div className="space-y-2 flex flex-col">
                   <FormField
                     name="companyName"
                     control={form.control}
                     render={({ field }: { field: any }) => (
-                      <FormItem className="col-span-2 md:col-span-1 w-[50%]">
-                        <FormLabel>Company Name</FormLabel>
+                      <FormItem className=" w-[50%]">
+                        <FormLabel className="font-semibold">
+                          Company Name
+                        </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
@@ -159,6 +168,50 @@ export const AppSettingsComponent = ({
                       </FormItem>
                     )}
                   />
+                  <div className="flex flex-row items-center justify-start gap-4">
+                    <FormField
+                      name="defaultLeadTime"
+                      control={form.control}
+                      render={({ field }: { field: any }) => (
+                        <FormItem className="col-span-1 md:col-span-1 w-[25%]">
+                          <FormLabel className="font-semibold">
+                            Default Lead Time
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type="number"
+                              className="text-md"
+                              required
+                              autoFocus
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      name="defaultProductionTime"
+                      control={form.control}
+                      render={({ field }: { field: any }) => (
+                        <FormItem className="col-span-1 md:col-span-1 w-[25%]">
+                          <FormLabel className="font-semibold">
+                            Default Production Time
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type="number"
+                              className="text-md"
+                              required
+                              autoFocus
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
               </CardContent>
               <CardFooter>

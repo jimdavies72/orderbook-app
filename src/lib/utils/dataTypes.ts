@@ -1,140 +1,159 @@
-type Supplier = {
-  _id: string,
-  supplierId: string,
-  name: string,
-  activeContainerCount: number,
-  enabled: boolean
+export type Supplier = {
+  _id: string;
+  supplierId: string;
+  name: string;
+  reminders: Reminders;
+  containers: Containers;
+  activeContainerCount: number;
+  enabled: boolean;
 };
 
-type Suppliers = [
-  Supplier, 
-]
+export type Suppliers = [Supplier];
 
-type SupplierSummary = {
-  count: number,
-  suppliers: Suppliers
+export type SupplierSummary = {
+  count: number;
+  suppliers: Suppliers;
 };
 
-type Comment = {
-  _id: string,
-  container: string,
-  order: string,
-  comment: string,
-  createdBy: string,
-  createdAt: string,
-  updatedBy: string,
-  updatedAt: string
-}
-
-type Comments = [
-  Comment
-]
-
-type Order = {
-  _id: string,
-  container: string,
-  supplier: string,
-  orderNumber: string,
-  forPurchasing: number,
-  productCode: string,
-  customer: string,
-  productType: string,
-  quantity: number,
-  unitWeight: number,
-  totalWeight: number,
-  ukRequiredDate: string,
-  orderPlacedDate: string,
-  orderReceived: boolean,
-  loaded: boolean,
-  sample: string,
-  fabricColour: string,
-  artworkDrawings: string,
-  printOnBag: string,
-  artworkSaved: string,
-  comments: Comments,
-  createdBy: string,
-  createdAt: string,
-  updatedBy: string,
-  updatedAt: string
-}
-
-type Orders = [
-  Order
-]
-
-type Container = {
-  _id: string,
-  supplier: string,
-  containerId: string,
-  complete: boolean,
-  orders: Orders,
-  value: number,
-  full: boolean,
-  containerNumber: string,
-  vesselDetails: string,
-  stuffingDate: string,
-  etaUKPort: string,
-  bookedIn: string,
-  copyDocsRec: string,
-  plasticTaxDocsRec: string,
-  docsToMe: string,
-  contListSaved: string,
-  comments: Comments,
+export type Reminder = {
+  _id: string;
+  supplier: string;
+  reminder: string;
+  enabled: boolean;
 };
 
-type Containers = [
-  Container
-];
+export type Reminders = [Reminder];
 
-type ContainersList = {
-    count: number,
-    containers: Containers
+export type Comment = {
+  _id: string;
+  container: string;
+  order: string;
+  comment: string;
+  createdBy: string;
+  createdAt: string;
+  updatedBy: string;
+  updatedAt: string;
 };
 
-type ErrorProps = {
-  error: Error,
+export type Comments = [Comment];
+
+export type Order = {
+  _id: string;
+  container: string;
+  supplier: string;
+  orderNumber: string;
+  unitCostPrice: number;
+  productCode: string;
+  customer: string;
+  productType: string;
+  quantity: number;
+  unitWeight: number;
+  totalWeight: number;
+  ukRequiredDate: string;
+  orderPlacedDate: string;
+  orderReceivedBySupplier: boolean;
+  loaded: boolean;
+  sample: string;
+  fabricColour: string;
+  artworkDrawings: string;
+  printOnBag: string;
+  artworkSaved: string;
+  comments: Comments;
+  createdBy: string;
+  createdAt: string;
+  updatedBy: string;
+  updatedAt: string;
+};
+
+export type Orders = [Order];
+
+export type Container = {
+  _id: string;
+  supplier: string;
+  supplierContainerNumber: string;
+  complete: boolean;
+  orders: Orders;
+  value: number;
+  addedToShippingForecast: boolean;
+  full: boolean;
+  shippingContainerNumber: string;
+  vesselName: string;
+  shippingRoute: string;
+  destinationPort: string;
+  stuffingDate: Date;
+  sailingDate: Date;
+  etaUKPort: Date;
+  bookedInDate: Date;
+  bookedInSlot: [];
+  copyDocsReceived: string;
+  plasticTaxDocsReceived: string;
+  docsToFinance: string;
+  contListSaved: string;
+  comments: Comments;
+};
+
+export type Containers = [Container];
+
+export type ContainersList = {
+  count: number;
+  containers: Containers;
+};
+
+export type ErrorProps = {
+  error: Error;
   reset: () => void;
 };
 
-type ResponseMessage = {
-  status: number,
-  title: string,
-  message: string
+export type ResponseMessage = {
+  status: number;
+  title: string;
+  message: string;
 };
 
-type AppSetting = {
-  companyName: string
-}
-
-type AppSettings = {
-  appSettings:[
-    AppSetting
-  ],
-  status: number
+export type PublicSettings = {
+  appSettings: [
+    {
+      companyName: string;
+    }
+  ];
+  status: number;
 };
 
-type Audit = {
-  _id: string,
-  model: string,
-  identifier: string,
-  action: string,
-  reason: string,
-  userId: string,
-  createdBy: string,
-  createdAt: string
+export type AppSetting = {
+  companyName: string;
+  defaultLeadTime: number;
+  defaultProductionTime: number;
 };
 
-type Audits = [
-  Audit
-];
-
-//Person is a test type
-type Person = {
-  id: string,
-  name: string,
-  role: string,
-  description: string,
-  image: string
+export type AppSettings = {
+  appSettings: [
+    {
+      companyName: string;
+      defaultLeadTime: number;
+      defaultProductionTime: number;
+    }
+  ];
+  status: number;
 };
 
-export type { SupplierSummary, ContainersList, Suppliers, Supplier, Containers, Container, Orders, Order, Comments, Comment, ErrorProps, ResponseMessage, AppSetting, AppSettings, Audit, Audits, Person };
+export type Audit = {
+  _id: string;
+  model: string;
+  identifier: string;
+  action: string;
+  reason: string;
+  userId: string;
+  createdBy: string;
+  createdAt: string;
+};
+
+export type Audits = [Audit];
+
+//Person is a test export type
+export type Person = {
+  id: string;
+  name: string;
+  role: string;
+  description: string;
+  image: string;
+};

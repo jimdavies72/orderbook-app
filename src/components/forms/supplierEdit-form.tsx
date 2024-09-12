@@ -6,6 +6,7 @@ import React, { Dispatch, SetStateAction } from 'react';
 import {Supplier, ResponseMessage} from '@/lib/utils/dataTypes';
 import { getUserProfileData } from '@/services/profile.service';
 
+import { Switch } from "@/components/ui/switch";
 import { Button } from '@/components/ui/button';
 import { useToast} from '@/components/ui/use-toast';
 import {
@@ -24,9 +25,9 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 const formSchema = z.object({
+  enabled: z.boolean(),
   supplierId: z.string().min(1),
   name: z.string().min(1),
-  enabled: z.boolean().default(true),
 });
 
 export const EditForm = ({
@@ -42,9 +43,9 @@ export const EditForm = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      enabled: supplierRow?.enabled,
       supplierId: supplierRow?.supplierId || "",
       name: supplierRow?.name || "",
-      enabled: supplierRow?.enabled || true,
     },
   });
 
@@ -82,11 +83,10 @@ export const EditForm = ({
       const response: ResponseMessage = await httpRequest(
         endpoint,
         payload,
-        httpVerb
+        httpVerb,
       );
-
+       
       if (response) {
-        router.refresh();
         toast({
           duration: 1500,
           title: response.title,
@@ -99,7 +99,8 @@ export const EditForm = ({
           description: "Something went wrong",
         });
       }
-
+      
+      router.refresh();
       setIsOpen(false);
 
     } catch (error) {
@@ -113,6 +114,26 @@ export const EditForm = ({
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col space-y-2 sm:px-0 px-4"
       >
+        <FormField
+          name="enabled"
+          control={form.control}
+          render={({ field }: { field: any }) => (
+            <FormItem className="col-span-2 md:col-span-1 align-middle">
+              <FormLabel htmlFor="enabled" className="mr-2">
+                Enabled:
+              </FormLabel>
+              <FormControl>
+                <Switch
+                  {...field}
+                  id="enabled"
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           name="supplierId"
           control={form.control}
@@ -144,31 +165,13 @@ export const EditForm = ({
                   placeholder="Supplier name"
                   className="text-md"
                   required
+                  autoComplete="off"
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <FormField
-          name="enabled"
-          control={form.control}
-          render={({ field }: { field: any }) => (
-            <FormItem className="col-span-2 md:col-span-1">
-              <FormLabel>Enabled</FormLabel>
-              <FormControl>
-                <Checkbox
-                  {...field}
-                  className="text-md ml-2 align-bottom"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         <div className="flex w-full sm:justify-end mt-4">
           <Button
             type="submit"

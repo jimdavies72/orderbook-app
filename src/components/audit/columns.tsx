@@ -13,6 +13,9 @@ export const columns: ColumnDef<Audit>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Model" />
     ),
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
   },
   {
     accessorKey: "identifier",
@@ -31,6 +34,10 @@ export const columns: ColumnDef<Audit>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Action" />
     ),
+    //required to allow faceted filtering to work correctly
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
   },
   {
     accessorKey: "reason",

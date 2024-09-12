@@ -97,7 +97,7 @@ export const DeleteForm = ({
         let httpVerb = "POST";
 
         const payload = {
-          model: getInitials(route),
+          model: route,
           identifier: identifier || "",
           ...values,
           action: "delete",

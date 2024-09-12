@@ -23,7 +23,7 @@ interface WithData<T> {
   container: string;
   supplier: string;
   orderNumber: string;
-  forPurchasing: number;
+  unitCostPrice: number;
   productCode: string;
   customer: string;
   productType: string;
@@ -32,7 +32,7 @@ interface WithData<T> {
   totalWeight: number;
   ukRequiredDate: string;
   orderPlacedDate: string;
-  orderReceived: boolean;
+  orderReceivedBySupplier: boolean;
   loaded: boolean;
   sample: string;
   fabricColour: string;

@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Row } from "@tanstack/react-table";
-import { MoreHorizontal, Eye, Trash2 } from "lucide-react";
+import { MoreHorizontal, Eye, ClipboardCopy } from "lucide-react";
 
 interface WithData<T> {
   _id: string;
@@ -63,6 +63,19 @@ export function DataTableRowActions<TData extends WithData<Audit>>({
               className="w-full justify-start flex rounded-md p-2 transition-all duration-75 hover:bg-neutral-100"
             >
               <IconMenu text="View Audit" icon={<Eye className="h-4 w-4" />} />
+            </button>
+          </DropdownMenuItem>
+          <DropdownMenuItem className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 ">
+            <button
+              onClick={() =>
+                navigator.clipboard.writeText(JSON.stringify(auditRow, null, 2))
+              }
+              className="w-full justify-start flex rounded-md p-2 transition-all duration-75 hover:bg-neutral-100"
+            >
+              <IconMenu
+                text="Make Copy"
+                icon={<ClipboardCopy className="h-4 w-4" />}
+              />
             </button>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
