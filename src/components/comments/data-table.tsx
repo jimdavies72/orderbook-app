@@ -84,7 +84,7 @@ export const DataTable = ({
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <div className="flex items-center mb-3">
         <ResponsiveDialog
           isOpen={isEditOpen}
           setIsOpen={setIsEditOpen}
@@ -110,7 +110,7 @@ export const DataTable = ({
               icon={<MessageSquarePlus className="h-5 w-5" />}
             />
           </Button>
-        ) : <>hello</>}
+        ) : null }
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">

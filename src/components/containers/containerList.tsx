@@ -50,6 +50,15 @@ const ContainerList = ({
     };
   }, [containerData]);
 
+  useEffect(() => {
+    //clear state when the supplier changes
+    setContainerComments([] as any);
+    setOrders([] as any);
+    setActive("");
+    setComBool(false);
+    setOrdBool(false);
+  }, [supplierId]);
+
   const commentAndOrderHandler = (containerId: string) => {
     setContainerId(containerId);
 
@@ -68,15 +77,12 @@ const ContainerList = ({
         setContainerComments(result.comments as Comments);
       } else {
         setContainerComments([] as any);
-      }
+      };
       if (result.orders.length > 0) {
         setOrders(result.orders as Orders);
       } else {
         setOrders([] as any);
-      }
-    } else {
-      setComBool(false);
-      setOrdBool(false);
+      };
     };
   };
 
@@ -96,23 +102,21 @@ const ContainerList = ({
           />
         </ResponsiveDialog>
         <ContainerCard>
-          <div className="border-b-2 flex flex-row items-center justify-between">
-            <div className="mb-2">
-              {!showAddButton ? null : (
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setIsEditOpen(true);
-                  }}
-                  className="rounded-md p-2 hover:bg-neutral-100"
-                >
-                  <IconMenu
-                    text="Add Container"
-                    icon={<LucideContainer className="h-5 w-5" />}
-                  />
-                </Button>
-              )}
-            </div>
+          <div className=" flex flex-row items-center justify-between">
+            {!showAddButton ? null : (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsEditOpen(true);
+                }}
+                className="rounded-md p-2 hover:bg-neutral-100"
+              >
+                <IconMenu
+                  text="Add Container"
+                  icon={<LucideContainer className="h-5 w-5" />}
+                />
+              </Button>
+            )}
             <div className="flex items-center space-x-2">
               <Switch
                 id="include-complete"
@@ -125,30 +129,30 @@ const ContainerList = ({
               <Label htmlFor="include-complete">Inc. Complete</Label>
             </div>
           </div>
-          <ScrollArea className="h-[215px] mt-1">
-            <div className="mr-4">
+          <div className="">
+            <ScrollArea className="h-[270px] mt-2">
               {containerData && containerData.length > 0 ? (
                 containerData.map((container: Container, index) => (
-                  <ContainerComponent
-                    key={index}
-                    activeContainer={active}
-                    commentAndOrderHandler={commentAndOrderHandler}
-                    container={container}
-                  />
-                ))
-              ) : (
-                <div className="flex justify-center items-center h-[22vh]">
+                    <ContainerComponent
+                      key={index}
+                      activeContainer={active}
+                      commentAndOrderHandler={commentAndOrderHandler}
+                      container={container}
+                    />
+                  ))
+                ) : (
+                  <div className="flex justify-center items-center h-[22vh]">
                   <SuchEmpty hasBorder={false} />
                 </div>
               )}
-            </div>
-            <ScrollBar orientation="vertical" />
-          </ScrollArea>
+              <ScrollBar orientation="vertical" />
+            </ScrollArea>
+          </div>
         </ContainerCard>
         <div>
           <ContainerCard>
             <CommentDataTable
-              showAddButton={showAddButton}
+              showAddButton={comBool}
               containerId={containerId}
               data={containerComments}
             />

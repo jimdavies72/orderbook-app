@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { ModeToggle } from "@/components/lightDark/theme-toggle";
+import SidePanel from "./sidePanel";
 import IconMenu from "@/components/icon-menu";
 import {
   LockKeyholeOpen,
@@ -12,6 +13,7 @@ import {
   Ship,
   House,
   Settings,
+  PanelRightOpen,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -139,18 +141,21 @@ const NavbarComponent = ({
       <div className="flex flex-row items-center justify-center">
         <div className="mr-4">
           {user ? (
-            <Button
-              className="shadow-md shadow-gray-500"
-              asChild
-              variant="outline"
-            >
-              <Link href="/api/auth/logout">
-                <IconMenu
-                  text="Sign Out"
-                  icon={<LockKeyhole className="h-4 w-4" />}
-                />
-              </Link>
-            </Button>
+            <div className="">
+              <Button
+                className="shadow-md shadow-gray-500 mr-4"
+                asChild
+                variant="outline"
+              >
+                <Link href="/api/auth/logout">
+                  <IconMenu
+                    text="Sign Out"
+                    icon={<LockKeyhole className="h-4 w-4" />}
+                  />
+                </Link>
+              </Button>
+              <SidePanel />
+            </div>
           ) : (
             <Button
               className="shadow-md shadow-gray-500"

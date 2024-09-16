@@ -25,3 +25,10 @@ export const properCase = (str: string): string => {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 };
+
+export const getDate = async (dateString: string) => {
+  const tmpDate = new Date(dateString);
+  const date = await tmpDate.toLocaleDateString();
+  const time = await tmpDate.toLocaleTimeString();
+  return `${date} ${time}`;
+};

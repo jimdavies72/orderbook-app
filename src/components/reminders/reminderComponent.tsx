@@ -59,17 +59,17 @@ const ReminderComponent = ({
   }, [supplierId]);
 
   return (
-    <div className=" pl-4 pr-4 ml-6 mr-6 mb-3 rounded-b-lg border shadow-md shadow-gray-500 ">
+    <div className=" pl-4 pr-4 ml-6 mr-6 mb-1 rounded-b-lg border shadow-md shadow-gray-500 ">
       <Accordion type="single" collapsible>
         <AccordionItem value="item-1">
           <AccordionTrigger>
-            <p>Reminders</p>
+            <p className="font-semibold">Reminders</p>
           </AccordionTrigger>
           <AccordionContent className="flex justify-center items-center">
             <Carousel
               plugins={[
                 Autoplay({
-                  delay: 8000,
+                  delay: 7000,
                   stopOnInteraction: true,
                 }),
               ]}

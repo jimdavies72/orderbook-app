@@ -28,6 +28,10 @@ const OrderList = ({
     };
   }, [orderData]);
 
+  useEffect(() => {
+    setOrderComments([] as any);
+  }, [supplierId, containerId]);
+
   const orderHandler = (orderId: string) => {
     setOrderId(orderId);
     
@@ -45,6 +49,8 @@ const OrderList = ({
       } else {
         setOrderComments([] as any);
       };
+    } else {
+      setBool(false);
     };
   };
 

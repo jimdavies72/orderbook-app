@@ -136,6 +136,11 @@ export type AppSettings = {
   status: number;
 };
 
+export type AppSettingData = {
+  appData?: AppSetting;
+  appId?: string | "";
+}
+
 export type Audit = {
   _id: string;
   model: string;
@@ -148,6 +153,22 @@ export type Audit = {
 };
 
 export type Audits = [Audit];
+
+export type Currency = {
+  code: string;
+  name: string;
+  symbol: string;
+};
+
+export type CurrencyArray = [Currency];
+
+export type CurrencyListData = {
+  _id: string;
+  baseCurrencyDefault?: string;
+  currencyList: CurrencyArray;
+  currenciesUsed: CurrencyArray;
+  updatedBy: string;
+};
 
 //Person is a test export type
 export type Person = {

@@ -1,8 +1,9 @@
 "use client";
 import { useRouter } from "next/navigation";
+import React, { Dispatch, SetStateAction } from "react";
+
 import { httpRequest } from "@/lib/utils/dataHelpers";
 import { getInitials } from "@/lib/utils/helperFunctions";
-import React, { Dispatch, SetStateAction } from "react";
 import { Container, ResponseMessage } from "@/lib/utils/dataTypes";
 import { getUserProfileData } from "@/services/profile.service";
 import {

@@ -1,5 +1,7 @@
 'use client';
 import { useState } from "react";
+
+import ReminderComponent from "../reminders/reminderComponent";
 import { Suppliers, Supplier, Containers } from "@/lib/utils/dataTypes";
 
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -19,12 +21,13 @@ export const SupplierButtonRibbon = ({
   }
 
   return (
-    <div className=" ml-6 mr-6 mb-0.5 shadow-md shadow-gray-500 rounded-t-lg border flex items-center justify-evenly">
-      <ScrollArea className="p-2 cursor-grabbing">
-        <div className="flex flex-row gap-3 items-center justify-center shadow-md">
-          {supplierData &&
-            supplierData.map((supplier: Supplier) => (
-              <Button
+    <div className="flex-col">
+      <div className=" ml-6 mr-6 mb-0.5 shadow-md shadow-gray-500 rounded-t-lg border flex items-center justify-evenly">
+        <ScrollArea className="p-2 cursor-grabbing">
+          <div className="flex flex-row gap-3 items-center justify-center shadow-md">
+            {supplierData &&
+              supplierData.map((supplier: Supplier) => (
+                <Button
                 key={supplier._id}
                 variant="outline"
                 onClick={() => {
@@ -33,16 +36,20 @@ export const SupplierButtonRibbon = ({
                 }}
                 className={
                   supplier._id === activeButton
-                    ? "font-bold rounded mt-1 mb-2 hover:bg-gray-200 bg-gray-300 shadow shadow-gray-400"
-                    : "rounded mt-1 mb-2 hover:bg-gray-200 shadow shadow-gray-400"
+                  ? "font-bold rounded mt-1 mb-2 hover:bg-gray-200 bg-gray-300 shadow shadow-gray-400"
+                  : "rounded mt-1 mb-2 hover:bg-gray-200 shadow shadow-gray-400"
                 }
-              >
-                {supplier.name} ({getActiveContainerCount(supplier.containers)})
-              </Button>
-            ))}
-        </div>
-        <ScrollBar orientation="horizontal" />
-      </ScrollArea>
+                >
+                  {supplier.name} ({getActiveContainerCount(supplier.containers)})
+                </Button>
+              ))}
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
+      </div>
+      <div className="mt-1">
+        <ReminderComponent supplierId={activeButton} />
+      </div>
     </div>
   );
 };

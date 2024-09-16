@@ -1,9 +1,6 @@
 'use server';
 'server-only';
 import { getAccessToken } from "@auth0/nextjs-auth0";
-import { PublicSettings, AppSettings } from "@/lib/utils/dataTypes";
-
-import { revalidatePath } from "next/cache";
 
 const createEndpoint = (endpoint: string) => {
   if (endpoint.length === 0) {
@@ -89,61 +86,3 @@ export const httpRequest = async (
   };
 };
 
-export const getAppSettings = async () => {
-  try {
-    const appId = process.env.APP_ID || "";
-
-    const response: AppSettings = await httpRequest(
-      "/appsetting",
-      { appId: appId },
-      "PATCH"
-    );
-
-    if (response.status !== 200) {
-      throw new Error("Failed to fetch data");
-    }
-
-    return {
-      appData: response.appSettings[0],
-      appId: appId
-    };
-
-  } catch (error: any) {
-    return {
-      error: { message: error.message },
-    }
-  };
-};
-
-export const getPublicSettings = async () => {
-  try {
-    const appId = process.env.APP_ID || "";
-
-    const response: PublicSettings = await httpRequest(
-      "/appsetting",
-      { appId: appId },
-      "PUT",
-      { cache: 'force-cache' },
-      true,
-    );
-
-    if (response.status !== 200) {
-      throw new Error("Failed to fetch data");
-    }
-    
-    return {
-      appData: response.appSettings[0],
-      appId: appId,
-    };
-    
-  } catch (error: any) {
-    return { error: error.message };
-  };
-};
-
-export const getDate = async (dateString: string) => {
-  const tmpDate = new Date(dateString);
-  const date = await tmpDate.toLocaleDateString();
-  const time = await tmpDate.toLocaleTimeString();
-  return `${date} ${time}`;
-};

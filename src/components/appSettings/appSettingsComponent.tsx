@@ -1,10 +1,11 @@
 "use client";
-import { useFormState } from "react-hook-form";
-import { DataTable } from "@/components/audit/data-table";
-import { getUserProfileData } from "@/services/profile.service";
 import { httpRequest } from "@/lib/utils/dataHelpers";
+import { ResponseMessage, AppSetting, Audits, CurrencyListData } from "@/lib/utils/dataTypes";
+import { getUserProfileData } from "@/services/profile.service";
 import { getInitials } from "@/lib/utils/helperFunctions";
-import { ResponseMessage, AppSetting, Audits } from "@/lib/utils/dataTypes";
+import { DataTable } from "@/components/audit/data-table";
+
+import CurrencySettings from "../currency/currencySettings";
 
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
@@ -43,12 +44,15 @@ const formSchema = z.object({
 export const AppSettingsComponent = ({
   appSettingData,
   auditData,
+  currencyData,
   appId,
 }: {
   appSettingData?: AppSetting,
   auditData: Audits,
+  currencyData: CurrencyListData,
   appId?: string | ""
 }) => {
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -126,9 +130,17 @@ export const AppSettingsComponent = ({
 
   return (
     <Tabs defaultValue="settings" className="w-[1000px]">
-      <TabsList className="grid w-full grid-cols-2 gap-4">
-        <TabsTrigger value="settings">Settings</TabsTrigger>
-        <TabsTrigger value="audit">Audit</TabsTrigger>
+      <TabsList className="grid w-full grid-cols-3 gap-4 mb-3">
+        <TabsTrigger
+          className="shadow-md shadow-slate-500" value="settings">
+          Settings
+        </TabsTrigger>
+        <TabsTrigger className="shadow-md shadow-slate-500" value="audit">
+          Audit
+        </TabsTrigger>
+        <TabsTrigger className="shadow-md shadow-slate-500"value="currencies">
+          Currencies
+        </TabsTrigger>
       </TabsList>
       <TabsContent value="settings">
         <Card className="shadow-md shadow-gray-500">
@@ -142,7 +154,7 @@ export const AppSettingsComponent = ({
                 <CardTitle>App Settings</CardTitle>
                 <CardDescription>
                   Make changes to your app settings here. Click save when you're
-                  done.
+                  done
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -231,13 +243,26 @@ export const AppSettingsComponent = ({
         </Card>
       </TabsContent>
       <TabsContent value="audit">
-        <Card>
+        <Card className="shadow-md shadow-gray-500">
           <CardHeader>
             <CardTitle>Audit</CardTitle>
-            <CardDescription>Review app audit actions here.</CardDescription>
+            <CardDescription>Review app audit actions here</CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             <DataTable data={auditData} />
+          </CardContent>
+        </Card>
+      </TabsContent>
+      <TabsContent value="currencies">
+        <Card className="shadow-md shadow-gray-500">
+          <CardHeader>
+            <CardTitle>Currency</CardTitle>
+            <CardDescription>
+              Adjust your application currencies here
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6 space-y-2">
+            <CurrencySettings currencyData={currencyData} />
           </CardContent>
         </Card>
       </TabsContent>

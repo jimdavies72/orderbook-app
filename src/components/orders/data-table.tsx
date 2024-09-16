@@ -98,9 +98,14 @@ export const DataTable = ({
     };
   }, [rowSelection]);
 
+  useEffect(() => {
+    //row selected when change of container or supplier
+    setRowSelection({});
+  }, [supplier, container]);
+
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <div className="flex items-center mb-3">
         <ResponsiveDialog
           isOpen={isEditOpen}
           setIsOpen={setIsEditOpen}
@@ -122,7 +127,7 @@ export const DataTable = ({
           onChange={(event) =>
             table.getColumn("orderNumber")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm w-[50%]"
+          className="max-w-sm w-[30%]"
         />
         {!showAddButton ? null : (
           <Button
